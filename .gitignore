@@ -1,0 +1,34 @@
+# Python
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+pip-log.txt
+pip-delete-this-directory.txt
+.tox/
+.coverage
+.cache
+nosetests.xml
+coverage.xml
+*,cover
+.hypothesis/
+.pytest_cache/
+
+# Node / React
+node_modules/
+dist/
+dist-ssr/
+*.local
+.eslintcache
+
+# Project Specific
+local_storage/
+backend/smartfilm.db
+backend/app/db/smartfilm.db
+*.log
+.env
+.DS_Store
+Thumbs.db
