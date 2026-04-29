@@ -210,17 +210,17 @@
   ('sqlite3.dll',
    'C:\\Users\\jorge\\AppData\\Local\\Programs\\Python\\Python313\\DLLs\\sqlite3.dll',
    'BINARY'),
-  ('static_frontend\\assets\\html2pdf-Do5ulXIl.js',
+  ('static_frontend\\assets\\html2pdf-NgSKRkVC.js',
    'C:\\Users\\jorge\\Documents\\SISTEMA '
-   'SMARFILMVAL\\backend\\static_frontend\\assets\\html2pdf-Do5ulXIl.js',
+   'SMARFILMVAL\\backend\\static_frontend\\assets\\html2pdf-NgSKRkVC.js',
    'DATA'),
   ('static_frontend\\assets\\index-BLx8oa7L.css',
    'C:\\Users\\jorge\\Documents\\SISTEMA '
    'SMARFILMVAL\\backend\\static_frontend\\assets\\index-BLx8oa7L.css',
    'DATA'),
-  ('static_frontend\\assets\\index-hJLbmX9D.js',
+  ('static_frontend\\assets\\index-CNjZqgXD.js',
    'C:\\Users\\jorge\\Documents\\SISTEMA '
-   'SMARFILMVAL\\backend\\static_frontend\\assets\\index-hJLbmX9D.js',
+   'SMARFILMVAL\\backend\\static_frontend\\assets\\index-CNjZqgXD.js',
    'DATA'),
   ('static_frontend\\favicon.svg',
    'C:\\Users\\jorge\\Documents\\SISTEMA '

@@ -9,7 +9,7 @@
  * 4. El backend abre el explorador de Windows mostrando el archivo generado
  */
 
-const API_URL = "http://localhost:8000/api/v1";
+const API_URL = "/api/v1";
 
 /**
  * Convierte un Blob a string base64.

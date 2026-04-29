@@ -18,7 +18,7 @@ export default function Login({ onLogin }) {
       formData.append('username', username);
       formData.append('password', password);
 
-      const response = await axios.post('http://localhost:8000/api/v1/auth/login', formData, {
+      const response = await axios.post('/api/v1/auth/login', formData, {
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
       });
 

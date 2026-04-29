@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Package, Plus, Trash2, AlertTriangle } from 'lucide-react';
 
-const API_URL = "http://localhost:8000/api/v1/inventory";
+const API_URL = "/api/v1/inventory";
 
 export default function InventoryPage() {
   const [rolls, setRolls] = useState([]);

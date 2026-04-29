@@ -3,8 +3,7 @@
  False,
  False,
  True,
- 'C:\\Users\\jorge\\Documents\\SISTEMA '
- 'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\PyInstaller\\bootloader\\images\\icon-windowed.ico',
+ ['C:\\Users\\jorge\\Documents\\SISTEMA SMARFILMVAL\\backend\\assets/icon.ico'],
  None,
  False,
  False,
@@ -84,7 +83,7 @@
  [],
  False,
  False,
- 1777432388,
+ 1777432751,
  [('runw.exe',
    'C:\\Users\\jorge\\Documents\\SISTEMA '
    'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\PyInstaller\\bootloader\\Windows-64bit-intel\\runw.exe',

@@ -14,7 +14,7 @@ import CalendarPage from './pages/CalendarPage';
 import { Package, Calendar as CalendarIcon } from 'lucide-react';
 import { generateAndSavePDF } from './utils/pdfUtils';
 
-const API_URL = "http://localhost:8000/api/v1/system/network";
+const API_URL = "/api/v1/system/network";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -46,7 +46,7 @@ function App() {
     setQuoteModalOpen(true);
     setBasePriceLoading(true);
     try {
-      const res = await axios.get("http://localhost:8000/api/v1/settings");
+      const res = await axios.get("/api/v1/settings");
       setQuoteParams(prev => ({...prev, basePrice: res.data.default_price_per_sqm}));
     } catch (err) {
       console.error("No se pudo cargar precio base");

@@ -146,11 +146,18 @@ if os.path.isdir(FRONTEND_DIR):
     @app.get("/{full_path:path}")
     def serve_spa(full_path: str):
         """
-        Catch-all: serves index.html for any React Router path.
+        Catch-all: serves static files from FRONTEND_DIR root, or index.html for React Router paths.
         API and static routes are matched first by FastAPI before this catches anything.
         """
+        # First, check if the file actually exists in the frontend dir (e.g. logo.png, favicon.svg)
+        file_path = os.path.join(FRONTEND_DIR, full_path)
+        if os.path.isfile(file_path):
+            return FileResponse(file_path)
+            
+        # Fallback to index.html for React Router
         index = os.path.join(FRONTEND_DIR, "index.html")
         if os.path.exists(index):
             return FileResponse(index)
+        
         from fastapi import HTTPException
         raise HTTPException(status_code=404, detail="Not found")

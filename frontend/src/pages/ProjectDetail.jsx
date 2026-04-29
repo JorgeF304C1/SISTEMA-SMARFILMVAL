@@ -4,7 +4,7 @@ import axios from 'axios';
 import { ArrowLeft, Box, DollarSign, FileDown, Plus, Trash2, Camera, Upload } from 'lucide-react';
 import { generateAndSavePDF } from '../utils/pdfUtils';
 
-const API_URL = "http://localhost:8000/api/v1";
+const API_URL = "/api/v1";
 
 export default function ProjectDetail() {
   const { id } = useParams();
@@ -677,7 +677,7 @@ export default function ProjectDetail() {
               </div>
             ) : (
               photos.map((p, i) => {
-                const url = `http://localhost:8000/${p.file_path.replace(/\\/g, '/')}`;
+                const url = `/${p.file_path.replace(/\\/g, '/')}`;
                 return (
                   <div key={p.id || i} className="glass-card" style={{ padding: '8px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
                     <div style={{ width: '100%', height: '150px', borderRadius: '8px', overflow: 'hidden', background: 'rgba(0,0,0,0.5)' }}>

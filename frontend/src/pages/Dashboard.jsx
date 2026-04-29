@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { FileText, TrendingUp, Layers, Trash2 } from 'lucide-react';
 import axios from 'axios';
 
-const API_URL = "http://localhost:8000/api/v1";
+const API_URL = "/api/v1";
 
 export default function Dashboard() {
   const [projects, setProjects] = useState([]);

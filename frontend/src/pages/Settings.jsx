@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Save, Settings as SettingsIcon } from 'lucide-react';
 
-const API_URL = "http://localhost:8000/api/v1";
+const API_URL = "/api/v1";
 
 export default function Settings() {
   const [settings, setSettings] = useState({
