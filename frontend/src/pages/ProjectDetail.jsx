@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { ArrowLeft, Box, DollarSign, FileDown, Plus, Trash2, Camera, Upload } from 'lucide-react';
+import { generateAndSavePDF } from '../utils/pdfUtils';
 
 const API_URL = "http://localhost:8000/api/v1";
 
@@ -30,6 +31,14 @@ export default function ProjectDetail() {
   const [tempLaborCost, setTempLaborCost] = useState("");
   const [isEditingInstDate, setIsEditingInstDate] = useState(false);
   const [tempInstDate, setTempInstDate] = useState("");
+  const [pdfStates, setPdfStates] = useState({
+    cotizacion: { generating: false, feedback: null },
+    nota_entrega: { generating: false, feedback: null },
+  });
+
+  const setPdfState = (type, updates) => {
+    setPdfStates(prev => ({ ...prev, [type]: { ...prev[type], ...updates } }));
+  };
 
   const loadData = async () => {
     try {
@@ -211,13 +220,11 @@ export default function ProjectDetail() {
     }
   };
 
-  const downloadPDF = async (type) => {
-    const html2pdf = (await import('html2pdf.js')).default;
+  const generateQuotePDF = async () => {
     const element = document.createElement('div');
     element.innerHTML = `
       <div style="font-family: Arial, sans-serif; padding: 40px; color: #333; background: white;">
         <div style="text-align: center; border-bottom: 2px solid #0070f3; padding-bottom: 20px; margin-bottom: 30px;">
-          <img src="/logo.png" alt="Smart Film Valencia" style="max-height: 80px; margin-bottom: 15px;" onerror="this.style.display='none'" />
           <p style="margin:0; color:#777;">Innovación en Vidrios Inteligentes</p>
         </div>
         <div style="display: flex; justify-content: space-between; margin-bottom: 30px;">
@@ -233,7 +240,6 @@ export default function ProjectDetail() {
             <p><strong>Estado:</strong> ${project.status}</p>
           </div>
         </div>
-        
         <table style="width: 100%; border-collapse: collapse; margin-bottom: 30px;">
           <tr style="background: #f4f4f4;">
             <th style="padding: 10px; border: 1px solid #ddd; text-align: left;">Concepto</th>
@@ -244,55 +250,34 @@ export default function ProjectDetail() {
             <td style="padding: 10px; border: 1px solid #ddd; text-align: right; font-size: 18px;"><strong>$${metrics.total_income}</strong></td>
           </tr>
         </table>
-        
         <div style="margin-top: 50px; text-align: center; font-size: 11px; color: #999; border-top: 1px solid #ddd; padding-top: 20px;">
           <p>Smart Film Valencia</p>
           <p>Los precios expresados están sujetos a cambio sin previo aviso.</p>
         </div>
       </div>
     `;
-    
-    const opt = {
-      margin: 0,
-      filename: `Cotizacion_${project.client_name}.pdf`,
-      image: { type: 'jpeg', quality: 0.98 },
-      html2canvas: { scale: 2 },
-      jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
-    };
-    
-    html2pdf().set(opt).from(element).output('blob').then(async (blob) => {
-      try {
-        if (window.showSaveFilePicker) {
-          const handle = await window.showSaveFilePicker({
-            suggestedName: opt.filename,
-            types: [{ description: 'PDF Document', accept: {'application/pdf': ['.pdf']} }],
-          });
-          const writable = await handle.createWritable();
-          await writable.write(blob);
-          await writable.close();
-        } else {
-          const url = URL.createObjectURL(blob);
-          const a = document.createElement('a');
-          a.href = url;
-          a.download = opt.filename;
-          document.body.appendChild(a);
-          a.click();
-          document.body.removeChild(a);
-          URL.revokeObjectURL(url);
-        }
-      } catch (err) {
-        if (err.name !== 'AbortError') console.error('Error saving PDF:', err);
-      }
+
+    await generateAndSavePDF({
+      element,
+      filename: `Cotizacion_${project.client_name}`,
+      docType: 'cotizacion',
+      projectId: project.id,
+      projectName: project.name,
+      clientName: project.client_name,
+      onStart: () => setPdfState('cotizacion', { generating: true, feedback: null }),
+      onSuccess: (result) => {
+        setPdfState('cotizacion', { generating: false, feedback: { type: 'success', msg: `✅ Guardado: ${result.filename}` } });
+        setTimeout(() => setPdfState('cotizacion', { feedback: null }), 5000);
+      },
+      onError: (msg) => setPdfState('cotizacion', { generating: false, feedback: { type: 'error', msg: `❌ ${msg}` } }),
     });
   };
 
-  const downloadDeliveryNote = async () => {
-    const html2pdf = (await import('html2pdf.js')).default;
+  const generateDeliveryNote = async () => {
     const element = document.createElement('div');
     element.innerHTML = `
       <div style="font-family: Arial, sans-serif; padding: 40px; color: #333; background: white;">
         <div style="text-align: center; border-bottom: 2px solid #0070f3; padding-bottom: 20px; margin-bottom: 30px;">
-          <img src="/logo.png" alt="Smart Film Valencia" style="max-height: 80px; margin-bottom: 15px;" onerror="this.style.display='none'" />
           <p style="margin:0; color:#777;">Innovación en Vidrios Inteligentes</p>
         </div>
         <div style="display: flex; justify-content: space-between; margin-bottom: 30px;">
@@ -307,7 +292,6 @@ export default function ProjectDetail() {
             <p><strong>Fecha:</strong> ${new Date().toLocaleDateString()}</p>
           </div>
         </div>
-        
         <table style="width: 100%; border-collapse: collapse; margin-bottom: 30px;">
           <tr style="background: #f4f4f4;">
             <th style="padding: 10px; border: 1px solid #ddd; text-align: left;">Concepto</th>
@@ -318,57 +302,38 @@ export default function ProjectDetail() {
             <td style="padding: 10px; border: 1px solid #ddd; text-align: right; font-size: 18px;"><strong>$${metrics.total_income}</strong></td>
           </tr>
         </table>
-
         <div style="margin-top: 30px; padding: 20px; background: #f9f9f9; border-radius: 8px;">
           <h3 style="margin-top:0; color: #0070f3;">CERTIFICADO DE CONFORMIDAD</h3>
-          <p style="line-height: 1.5; font-size: 14px;">Las áreas acordadas han sido revestidas con la tecnología Smart Film y probadas operativamente (Transparente / Opaco) de forma satisfactoria. La recepción de este documento avala la conformidad del proyecto terminado en su aspecto visual y eléctrico.</p>
+          <p style="line-height: 1.5; font-size: 14px;">Las áreas acordadas han sido revestidas con la tecnología Smart Film y probadas operativamente de forma satisfactoria.</p>
           <p style="line-height: 1.5; font-size: 14px; margin-top: 15px;"><strong>Términos de Garantía:</strong></p>
           <ul style="font-size: 14px;">
-            <li>Se otorga una garantía de <strong>3 meses</strong> por defectos de fábrica comprobables del film o de los módulos electrónicos.</li>
-            <li>Esta garantía NO cubre daños producidos por picos severos de voltaje local, ingreso de humedad posterior a la instalación o el uso de químicos abrasivos sobre el vidrio.</li>
-            <li>Toda manipulación del cableado por personal externo anulará automáticamente la garantía del material.</li>
+            <li>Se otorga una garantía de <strong>3 meses</strong> por defectos de fábrica comprobables.</li>
+            <li>Esta garantía NO cubre daños por picos de voltaje, humedad o químicos abrasivos.</li>
+            <li>Toda manipulación del cableado por personal externo anulará la garantía.</li>
           </ul>
         </div>
-        
         <div style="margin-top: 50px; text-align: center; font-size: 11px; color: #999; border-top: 1px solid #ddd; padding-top: 20px;">
           <p>Smart Film Valencia</p>
         </div>
       </div>
     `;
-    
-    const opt = {
-      margin: 0,
-      filename: `Nota_Entrega_${project.client_name}.pdf`,
-      image: { type: 'jpeg', quality: 0.98 },
-      html2canvas: { scale: 2 },
-      jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
-    };
-    
-    html2pdf().set(opt).from(element).output('blob').then(async (blob) => {
-      try {
-        if (window.showSaveFilePicker) {
-          const handle = await window.showSaveFilePicker({
-            suggestedName: opt.filename,
-            types: [{ description: 'PDF Document', accept: {'application/pdf': ['.pdf']} }],
-          });
-          const writable = await handle.createWritable();
-          await writable.write(blob);
-          await writable.close();
-        } else {
-          const url = URL.createObjectURL(blob);
-          const a = document.createElement('a');
-          a.href = url;
-          a.download = opt.filename;
-          document.body.appendChild(a);
-          a.click();
-          document.body.removeChild(a);
-          URL.revokeObjectURL(url);
-        }
-      } catch (err) {
-        if (err.name !== 'AbortError') console.error('Error saving PDF:', err);
-      }
+
+    await generateAndSavePDF({
+      element,
+      filename: `NotaEntrega_${project.client_name}`,
+      docType: 'nota_entrega',
+      projectId: project.id,
+      projectName: project.name,
+      clientName: project.client_name,
+      onStart: () => setPdfState('nota_entrega', { generating: true, feedback: null }),
+      onSuccess: (result) => {
+        setPdfState('nota_entrega', { generating: false, feedback: { type: 'success', msg: `✅ Guardado: ${result.filename}` } });
+        setTimeout(() => setPdfState('nota_entrega', { feedback: null }), 5000);
+      },
+      onError: (msg) => setPdfState('nota_entrega', { generating: false, feedback: { type: 'error', msg: `❌ ${msg}` } }),
     });
   };
+
 
   if (!project) return <div style={{ padding: '40px' }}>Cargando...</div>;
 
@@ -712,7 +677,7 @@ export default function ProjectDetail() {
               </div>
             ) : (
               photos.map((p, i) => {
-                const url = `http://localhost:8000/photos/${p.file_path.split('photos/')[1].replace(/\\/g, '/')}`;
+                const url = `http://localhost:8000/${p.file_path.replace(/\\/g, '/')}`;
                 return (
                   <div key={p.id || i} className="glass-card" style={{ padding: '8px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
                     <div style={{ width: '100%', height: '150px', borderRadius: '8px', overflow: 'hidden', background: 'rgba(0,0,0,0.5)' }}>
@@ -729,23 +694,63 @@ export default function ProjectDetail() {
       {/* Docs Tab */}
       {activeTab === 'documentos' && (
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '24px' }}>
+
+          {/* Cotización Formal */}
           <div className="glass-card" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
             <FileDown size={48} color="var(--primary-blue)" style={{ marginBottom: '16px' }} />
             <h3 style={{ marginBottom: '8px' }}>Cotización Formal</h3>
-            <p style={{ color: 'var(--text-muted)', fontSize: '14px', marginBottom: '24px' }}>Documento en A4 con los cálculos de costo según los m² registrados en la plataforma.</p>
-            <button onClick={() => downloadPDF('quote')} className="btn-primary" style={{ width: '100%', justifyContent: 'center' }}>Descargar PDF</button>
+            <p style={{ color: 'var(--text-muted)', fontSize: '14px', marginBottom: '24px' }}>Documento con los cálculos de costo según los m² registrados. Se guarda en la carpeta del proyecto.</p>
+            {pdfStates.cotizacion.feedback && (
+              <div style={{ marginBottom: '12px', padding: '8px 12px', borderRadius: '8px', fontSize: '13px',
+                background: pdfStates.cotizacion.feedback.type === 'success' ? 'rgba(16,185,129,0.15)' : 'rgba(239,68,68,0.15)',
+                color: pdfStates.cotizacion.feedback.type === 'success' ? 'var(--success-green)' : '#ef4444',
+                border: `1px solid ${pdfStates.cotizacion.feedback.type === 'success' ? 'var(--success-green)' : '#ef4444'}`,
+                width: '100%', textAlign: 'left'
+              }}>{pdfStates.cotizacion.feedback.msg}</div>
+            )}
+            <button
+              onClick={generateQuotePDF}
+              disabled={pdfStates.cotizacion.generating}
+              className="btn-primary"
+              style={{ width: '100%', justifyContent: 'center' }}
+            >
+              <FileDown size={16} style={{ marginRight: '8px' }} />
+              {pdfStates.cotizacion.generating ? 'Generando...' : 'Generar Cotización'}
+            </button>
           </div>
-          
-          <div className="glass-card" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', opacity: (project.status === 'Prospecto' || project.status === 'Cotizado') ? 0.5 : 1 }}>
+
+          {/* Nota de Entrega */}
+          <div className="glass-card" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center',
+            opacity: (project.status === 'Prospecto' || project.status === 'Cotizado') ? 0.5 : 1
+          }}>
             <FileDown size={48} color="var(--accent-cyan)" style={{ marginBottom: '16px' }} />
             <h3 style={{ marginBottom: '8px' }}>Nota de Entrega</h3>
-            <p style={{ color: 'var(--text-muted)', fontSize: '14px', marginBottom: '24px' }}>Documento de cierre de obra con políticas de garantía y conformidad.</p>
+            <p style={{ color: 'var(--text-muted)', fontSize: '14px', marginBottom: '24px' }}>Documento de cierre de obra con políticas de garantía y conformidad. Se guarda en la carpeta del proyecto.</p>
+            {pdfStates.nota_entrega.feedback && (
+              <div style={{ marginBottom: '12px', padding: '8px 12px', borderRadius: '8px', fontSize: '13px',
+                background: pdfStates.nota_entrega.feedback.type === 'success' ? 'rgba(16,185,129,0.15)' : 'rgba(239,68,68,0.15)',
+                color: pdfStates.nota_entrega.feedback.type === 'success' ? 'var(--success-green)' : '#ef4444',
+                border: `1px solid ${pdfStates.nota_entrega.feedback.type === 'success' ? 'var(--success-green)' : '#ef4444'}`,
+                width: '100%', textAlign: 'left'
+              }}>{pdfStates.nota_entrega.feedback.msg}</div>
+            )}
             {(project.status === 'Prospecto' || project.status === 'Cotizado' || project.status === 'Cancelado') ? (
-               <button disabled className="btn-outline" style={{ width: '100%', justifyContent: 'center', cursor: 'not-allowed', color: 'gray', borderColor: 'gray' }}>Bloqueado (Requiere Aprobación)</button>
+              <button disabled className="btn-outline" style={{ width: '100%', justifyContent: 'center', cursor: 'not-allowed', color: 'gray', borderColor: 'gray' }}>
+                Bloqueado (Requiere Aprobación)
+              </button>
             ) : (
-               <button onClick={downloadDeliveryNote} className="btn-outline" style={{ width: '100%', justifyContent: 'center' }}>Descargar PDF</button>
+              <button
+                onClick={generateDeliveryNote}
+                disabled={pdfStates.nota_entrega.generating}
+                className="btn-outline"
+                style={{ width: '100%', justifyContent: 'center' }}
+              >
+                <FileDown size={16} style={{ marginRight: '8px' }} />
+                {pdfStates.nota_entrega.generating ? 'Generando...' : 'Generar Nota de Entrega'}
+              </button>
             )}
           </div>
+
         </div>
       )}
     </div>

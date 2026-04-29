@@ -1,8 +1,14 @@
+"""
+main.py — Smart Film Valencia API
+Sirve tanto la API REST como el frontend React compilado (en modo producción/ejecutable).
+"""
 import socket
 import os
+import sys
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
 from app.db.database import engine, Base
 from app.db import models
 
@@ -11,10 +17,29 @@ Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="Smart Film Valencia API")
 
-# Mount local storage for photos
-os.makedirs("../local_storage/photos", exist_ok=True)
-app.mount("/photos", StaticFiles(directory="../local_storage/photos"), name="photos")
+# ── Resolve base paths ───────────────────────────────────────────────────────
+# When running as a PyInstaller bundle, __file__ lives inside the temp folder.
+# We keep local_storage NEXT TO the .exe (or backend/ in dev mode).
+if getattr(sys, 'frozen', False):
+    # Packaged .exe: everything is relative to the executable's directory
+    APP_DIR = os.path.dirname(sys.executable)
+else:
+    # Dev mode: relative to this file (backend/)
+    APP_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
 
+STORAGE_DIR = os.path.join(APP_DIR, "local_storage")
+
+# ── Ensure local_storage directories exist ───────────────────────────────────
+os.makedirs(os.path.join(STORAGE_DIR, "proyectos"), exist_ok=True)
+os.makedirs(os.path.join(STORAGE_DIR, "documentos", "cotizador_express"), exist_ok=True)
+os.makedirs(os.path.join(STORAGE_DIR, "documentos", "cotizaciones"), exist_ok=True)
+os.makedirs(os.path.join(STORAGE_DIR, "documentos", "notas_de_entrega"), exist_ok=True)
+
+# ── Static file mounts for user data ────────────────────────────────────────
+app.mount("/proyectos",   StaticFiles(directory=os.path.join(STORAGE_DIR, "proyectos")),  name="proyectos")
+app.mount("/documentos",  StaticFiles(directory=os.path.join(STORAGE_DIR, "documentos")), name="documentos")
+
+# ── CORS ─────────────────────────────────────────────────────────────────────
 def get_local_ip():
     try:
         s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -29,8 +54,10 @@ local_ip = get_local_ip()
 
 origins = [
     "http://localhost",
-    "http://localhost:5173", # Vite dev server
+    "http://localhost:5173",   # Vite dev server
+    "http://localhost:8000",   # Prod (FastAPI serving frontend)
     f"http://{local_ip}:5173",
+    f"http://{local_ip}:8000",
     "tauri://localhost",
 ]
 
@@ -42,12 +69,14 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-@app.get("/")
+# ── API root ─────────────────────────────────────────────────────────────────
+@app.get("/api")
 def read_root():
-    return {"message": "Welcome to Smart Film Valencia API"}
+    return {"message": "Smart Film Valencia API", "version": "1.0.0"}
 
+# ── Settings endpoints ───────────────────────────────────────────────────────
 from pydantic import BaseModel
-from fastapi import Depends, HTTPException
+from fastapi import Depends
 from sqlalchemy.orm import Session
 from app.db.database import get_db
 
@@ -83,11 +112,35 @@ def update_settings(settings_update: SettingsUpdate, db: Session = Depends(get_d
     db.refresh(settings)
     return settings
 
-# Include routers
-from app.api import projects, auth, inventory, expenses
+# ── Feature routers ──────────────────────────────────────────────────────────
+from app.api import projects, auth, inventory, expenses, documents
 
-app.include_router(auth.router, prefix="/api/v1/auth")
-app.include_router(inventory.router, prefix="/api/v1")
-app.include_router(expenses.router, prefix="/api/v1")
-app.include_router(projects.router, prefix="/api/v1")
-# PDF endpoints migrated to Frontend to avoid GTK3 dependency on Windows.
+app.include_router(auth.router,       prefix="/api/v1/auth")
+app.include_router(inventory.router,  prefix="/api/v1")
+app.include_router(expenses.router,   prefix="/api/v1")
+app.include_router(projects.router,   prefix="/api/v1")
+app.include_router(documents.router,  prefix="/api/v1")
+
+# ── Serve compiled React frontend (production / .exe mode) ───────────────────
+# The frontend build outputs to backend/static_frontend/ via vite.config.js
+FRONTEND_DIR = os.path.join(os.path.dirname(__file__), "static_frontend")
+
+if os.path.isdir(FRONTEND_DIR):
+    # Serve static assets (JS, CSS, images)
+    app.mount("/assets", StaticFiles(directory=os.path.join(FRONTEND_DIR, "assets")), name="frontend_assets")
+
+    @app.get("/")
+    @app.get("/{full_path:path}")
+    def serve_spa(full_path: str = ""):
+        """
+        Catch-all: serves index.html for any route not matched by the API.
+        This enables React Router to handle client-side navigation.
+        """
+        # Don't intercept API routes
+        if full_path.startswith("api/") or full_path.startswith("proyectos/") or full_path.startswith("documentos/"):
+            from fastapi import HTTPException
+            raise HTTPException(status_code=404)
+        index = os.path.join(FRONTEND_DIR, "index.html")
+        if os.path.exists(index):
+            return FileResponse(index)
+        return {"message": "Frontend not built. Run: npm run build in /frontend"}

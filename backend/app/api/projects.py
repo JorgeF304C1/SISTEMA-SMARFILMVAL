@@ -374,8 +374,21 @@ def upload_photo(project_id: int, file: UploadFile = File(...), db: Session = De
     project = db.query(models.Project).filter(models.Project.id == project_id).first()
     if not project:
         raise HTTPException(status_code=404, detail="Project not found")
-        
-    upload_dir = f"../local_storage/photos/project_{project_id}"
+    
+    # Sanitize project name for use in folder path
+    def sanitize(name: str) -> str:
+        return "".join(c if c.isalnum() or c in " _-" else "_" for c in (name or "SinNombre")).strip().replace(" ", "_")
+    
+    proj_folder_name = f"Proyecto_{project_id}_{sanitize(project.name or '')}"
+    
+    # Resolve storage path: works in dev mode and PyInstaller .exe
+    import sys
+    if getattr(sys, 'frozen', False):
+        storage_base = os.path.join(os.path.dirname(sys.executable), "local_storage")
+    else:
+        storage_base = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../../local_storage"))
+    
+    upload_dir = os.path.join(storage_base, "proyectos", proj_folder_name, "fotos")
     os.makedirs(upload_dir, exist_ok=True)
     
     file_ext = file.filename.split(".")[-1] if "." in file.filename else "jpg"
@@ -384,8 +397,11 @@ def upload_photo(project_id: int, file: UploadFile = File(...), db: Session = De
     
     with open(file_path, "wb") as buffer:
         shutil.copyfileobj(file.file, buffer)
-        
-    db_photo = models.ProjectPhoto(project_id=project_id, file_path=file_path)
+    
+    # Store a clean relative path so we can build the URL later
+    relative_path = f"proyectos/{proj_folder_name}/fotos/{unique_filename}"
+    
+    db_photo = models.ProjectPhoto(project_id=project_id, file_path=relative_path)
     db.add(db_photo)
     db.commit()
     db.refresh(db_photo)

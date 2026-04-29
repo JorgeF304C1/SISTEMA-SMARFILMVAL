@@ -64,8 +64,6 @@ class Project(Base):
     
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
-    
-    updated_at = Column(DateTime(timezone=True), onupdate=func.now())
     areas = relationship("ProjectArea", back_populates="project", cascade="all, delete-orphan")
     expenses = relationship("ProjectExpense", back_populates="project", cascade="all, delete-orphan")
     photos = relationship("ProjectPhoto", back_populates="project", cascade="all, delete-orphan")

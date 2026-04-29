@@ -1,5 +1,5 @@
 import { Routes, Route, Link, useNavigate } from 'react-router-dom';
-import { Home, Settings as SettingsIcon, Plus, X, LogOut, Users, Search as SearchIcon, Calculator, Briefcase, FileDown, Shield } from 'lucide-react';
+import { Home, Settings as SettingsIcon, Plus, X, LogOut, Users, Search as SearchIcon, Calculator, Briefcase, FileDown, Shield, CheckCircle } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import Dashboard from './pages/Dashboard';
@@ -12,6 +12,7 @@ import UsersPage from './pages/UsersPage';
 import ProjectsPage from './pages/ProjectsPage';
 import CalendarPage from './pages/CalendarPage';
 import { Package, Calendar as CalendarIcon } from 'lucide-react';
+import { generateAndSavePDF } from './utils/pdfUtils';
 
 const API_URL = "http://localhost:8000/api/v1/system/network";
 
@@ -22,6 +23,8 @@ function App() {
   const [quoteModalOpen, setQuoteModalOpen] = useState(false);
   const [quoteParams, setQuoteParams] = useState({ width: '', height: '', basePrice: 200 });
   const [basePriceLoading, setBasePriceLoading] = useState(false);
+  const [pdfGenerating, setPdfGenerating] = useState(false);
+  const [pdfFeedback, setPdfFeedback] = useState(null); // { type: 'success'|'error', msg }
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -56,7 +59,6 @@ function App() {
     const area = parseFloat(quoteParams.width || 0) * parseFloat(quoteParams.height || 0);
     const total = area * quoteParams.basePrice;
     
-    const html2pdf = (await import('html2pdf.js')).default;
     const element = document.createElement('div');
     element.innerHTML = `
       <div style="font-family: Arial, sans-serif; padding: 40px; color: #333; background: white;">
@@ -92,39 +94,27 @@ function App() {
       </div>
     `;
 
-    const opt = {
-      margin: 0, 
-      filename: 'Cotizacion_Express_SmartFilm.pdf',
-      image: { type: 'jpeg', quality: 0.98 },
-      html2canvas: { scale: 2 },
-      jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
-    };
-
-    html2pdf().set(opt).from(element).output('blob').then(async (blob) => {
-      try {
-        if (window.showSaveFilePicker) {
-          const handle = await window.showSaveFilePicker({
-            suggestedName: opt.filename,
-            types: [{ description: 'PDF Document', accept: {'application/pdf': ['.pdf']} }],
-          });
-          const writable = await handle.createWritable();
-          await writable.write(blob);
-          await writable.close();
-        } else {
-          const url = URL.createObjectURL(blob);
-          const a = document.createElement('a');
-          a.href = url;
-          a.download = opt.filename;
-          document.body.appendChild(a);
-          a.click();
-          document.body.removeChild(a);
-          URL.revokeObjectURL(url);
-        }
-      } catch (err) {
-        if (err.name !== 'AbortError') console.error('Error saving PDF:', err);
-      }
+    setPdfFeedback(null);
+    await generateAndSavePDF({
+      element,
+      filename: 'Cotizacion_Express_SmartFilm',
+      docType: 'express',
+      projectId: null,
+      projectName: null,
+      clientName: 'Express',
+      onStart: () => setPdfGenerating(true),
+      onSuccess: (result) => {
+        setPdfGenerating(false);
+        setPdfFeedback({ type: 'success', msg: `✅ Guardado: ${result.filename}` });
+        setTimeout(() => setPdfFeedback(null), 4000);
+      },
+      onError: (msg) => {
+        setPdfGenerating(false);
+        setPdfFeedback({ type: 'error', msg: `❌ ${msg}` });
+      },
     });
   };
+
 
   if (!user) {
     return <Login onLogin={setUser} />;
@@ -236,8 +226,27 @@ function App() {
               <p style={{ color: 'var(--text-muted)', fontSize: '12px', marginTop: '4px' }}>Total Área: {(parseFloat(quoteParams.width || 0) * parseFloat(quoteParams.height || 0)).toFixed(2)} m²</p>
             </div>
             
-            <button onClick={handleDownloadQuote} className="btn-primary" style={{ width: '100%', justifyContent: 'center', marginTop: '16px' }}>
-              <FileDown size={16} style={{ marginRight: '8px' }} /> Descargar PDF
+            {pdfFeedback && (
+              <div style={{
+                marginTop: '12px',
+                padding: '10px 14px',
+                borderRadius: '8px',
+                fontSize: '13px',
+                background: pdfFeedback.type === 'success' ? 'rgba(16,185,129,0.15)' : 'rgba(239,68,68,0.15)',
+                color: pdfFeedback.type === 'success' ? 'var(--success-green)' : '#ef4444',
+                border: `1px solid ${pdfFeedback.type === 'success' ? 'var(--success-green)' : '#ef4444'}`,
+              }}>
+                {pdfFeedback.msg}
+              </div>
+            )}
+            <button
+              onClick={handleDownloadQuote}
+              disabled={pdfGenerating}
+              className="btn-primary"
+              style={{ width: '100%', justifyContent: 'center', marginTop: '16px' }}
+            >
+              <FileDown size={16} style={{ marginRight: '8px' }} />
+              {pdfGenerating ? 'Generando...' : 'Generar Cotización Express'}
             </button>
           </div>
         </div>

@@ -11,8 +11,18 @@ export default defineConfig({
   },
   envPrefix: ['VITE_', 'TAURI_'],
   build: {
-    target: process.env.TAURI_PLATFORM == 'windows' ? 'chrome105' : 'safari13',
-    minify: !process.env.TAURI_DEBUG ? 'esbuild' : false,
-    sourcemap: !!process.env.TAURI_DEBUG,
+    // Output the built frontend into the backend folder so PyInstaller can bundle everything together
+    outDir: '../backend/static_frontend',
+    emptyOutDir: true,
+    // Use a broadly compatible target for the embedded browser (WebView2 on Windows, Safari on macOS)
+    target: 'es2020',
+    minify: 'esbuild',
+    sourcemap: false,
+    rollupOptions: {
+      output: {
+        // Ensure chunk filenames don't have hash issues
+        manualChunks: undefined,
+      }
+    }
   },
 })
