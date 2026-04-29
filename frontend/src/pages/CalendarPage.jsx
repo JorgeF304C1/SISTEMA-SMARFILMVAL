@@ -3,7 +3,7 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { Calendar as CalendarIcon, Clock } from 'lucide-react';
 
-const API_URL = "http://localhost:8000/api/v1/projects";
+const API_URL = "/api/v1/projects";
 
 export default function CalendarPage() {
   const [projects, setProjects] = useState([]);

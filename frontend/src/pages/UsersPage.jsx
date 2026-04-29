@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { UserPlus, Shield, Trash2 } from 'lucide-react';
 
-const API_URL = "http://localhost:8000/api/v1/auth";
+const API_URL = "/api/v1/auth";
 
 export default function UsersPage() {
   const [users, setUsers] = useState([]);

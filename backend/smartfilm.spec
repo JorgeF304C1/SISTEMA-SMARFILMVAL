@@ -106,8 +106,7 @@ exe = EXE(
     target_arch=None,
     codesign_identity=None,
     entitlements_file=None,
-    # Descomenta y ajusta si tienes un .ico para el ícono del .exe:
-    # icon='assets/icon.ico',
+    icon='assets/icon.ico',
 )
 
 coll = COLLECT(

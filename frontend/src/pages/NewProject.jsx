@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Save, Search, CheckCircle, AlertCircle } from 'lucide-react';
 import axios from 'axios';
 
-const API_URL = "http://localhost:8000/api/v1";
+const API_URL = "/api/v1";
 
 export default function NewProject() {
   const navigate = useNavigate();
