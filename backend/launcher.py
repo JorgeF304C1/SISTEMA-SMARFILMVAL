@@ -25,9 +25,16 @@ else:
 # La base de datos y local_storage viven JUNTO al .exe (no en _MEIPASS)
 os.chdir(APP_DIR)
 
-PORT = 8000
+def get_free_port():
+    import socket
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        s.bind(('', 0))
+        return s.getsockname()[1]
+
 HOST = "127.0.0.1"
+PORT = get_free_port()
 URL  = f"http://{HOST}:{PORT}"
+
 
 
 def wait_for_server(host: str, port: int, timeout: int = 30) -> bool:
@@ -45,8 +52,10 @@ def wait_for_server(host: str, port: int, timeout: int = 30) -> bool:
 def start_api_server():
     """Arranca FastAPI + uvicorn en un hilo de fondo."""
     import uvicorn
+    import app.main  # Import explicitly so PyInstaller detects it
+    
     uvicorn.run(
-        "app.main:app",
+        app.main.app,
         host=HOST,
         port=PORT,
         log_level="warning",

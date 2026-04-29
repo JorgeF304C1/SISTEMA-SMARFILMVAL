@@ -271,6 +271,46 @@
    'C:\\Users\\jorge\\Documents\\SISTEMA '
    'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\anyio\\to_thread.py',
    'PYMODULE'),
+  ('app',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\app\\__init__.py',
+   'PYMODULE'),
+  ('app.api',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\app\\api\\__init__.py',
+   'PYMODULE'),
+  ('app.api.auth',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\app\\api\\auth.py',
+   'PYMODULE'),
+  ('app.api.documents',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\app\\api\\documents.py',
+   'PYMODULE'),
+  ('app.api.expenses',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\app\\api\\expenses.py',
+   'PYMODULE'),
+  ('app.api.inventory',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\app\\api\\inventory.py',
+   'PYMODULE'),
+  ('app.api.projects',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\app\\api\\projects.py',
+   'PYMODULE'),
+  ('app.db', '-', 'PYMODULE'),
+  ('app.db.database',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\app\\db\\database.py',
+   'PYMODULE'),
+  ('app.db.models',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\app\\db\\models.py',
+   'PYMODULE'),
+  ('app.main',
+   'C:\\Users\\jorge\\Documents\\SISTEMA SMARFILMVAL\\backend\\app\\main.py',
+   'PYMODULE'),
   ('argparse',
    'C:\\Users\\jorge\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\argparse.py',
    'PYMODULE'),
@@ -900,6 +940,10 @@
    'C:\\Users\\jorge\\Documents\\SISTEMA '
    'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\fastapi\\sse.py',
    'PYMODULE'),
+  ('fastapi.staticfiles',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\fastapi\\staticfiles.py',
+   'PYMODULE'),
   ('fastapi.types',
    'C:\\Users\\jorge\\Documents\\SISTEMA '
    'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\fastapi\\types.py',
@@ -1118,6 +1162,50 @@
    'PYMODULE'),
   ('json.scanner',
    'C:\\Users\\jorge\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\json\\scanner.py',
+   'PYMODULE'),
+  ('jwt',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\jwt\\__init__.py',
+   'PYMODULE'),
+  ('jwt.algorithms',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\jwt\\algorithms.py',
+   'PYMODULE'),
+  ('jwt.api_jwk',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\jwt\\api_jwk.py',
+   'PYMODULE'),
+  ('jwt.api_jws',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\jwt\\api_jws.py',
+   'PYMODULE'),
+  ('jwt.api_jwt',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\jwt\\api_jwt.py',
+   'PYMODULE'),
+  ('jwt.exceptions',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\jwt\\exceptions.py',
+   'PYMODULE'),
+  ('jwt.jwk_set_cache',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\jwt\\jwk_set_cache.py',
+   'PYMODULE'),
+  ('jwt.jwks_client',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\jwt\\jwks_client.py',
+   'PYMODULE'),
+  ('jwt.types',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\jwt\\types.py',
+   'PYMODULE'),
+  ('jwt.utils',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\jwt\\utils.py',
+   'PYMODULE'),
+  ('jwt.warnings',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\jwt\\warnings.py',
    'PYMODULE'),
   ('logging',
    'C:\\Users\\jorge\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\logging\\__init__.py',
@@ -3296,6 +3384,10 @@
   ('starlette.routing',
    'C:\\Users\\jorge\\Documents\\SISTEMA '
    'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\starlette\\routing.py',
+   'PYMODULE'),
+  ('starlette.staticfiles',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\starlette\\staticfiles.py',
    'PYMODULE'),
   ('starlette.status',
    'C:\\Users\\jorge\\Documents\\SISTEMA '
