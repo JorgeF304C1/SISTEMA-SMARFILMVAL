@@ -71,6 +71,7 @@ app.add_middleware(
 
 # ── API root ─────────────────────────────────────────────────────────────────
 @app.get("/api")
+@app.get("/api/info")
 def read_root():
     return {"message": "Smart Film Valencia API", "version": "1.0.0"}
 
@@ -123,24 +124,33 @@ app.include_router(documents.router,  prefix="/api/v1")
 
 # ── Serve compiled React frontend (production / .exe mode) ───────────────────
 # The frontend build outputs to backend/static_frontend/ via vite.config.js
-FRONTEND_DIR = os.path.join(os.path.dirname(__file__), "static_frontend")
+if getattr(sys, 'frozen', False):
+    # In .exe mode, static_frontend is in _MEIPASS
+    FRONTEND_DIR = os.path.join(sys._MEIPASS, "static_frontend")
+else:
+    FRONTEND_DIR = os.path.join(os.path.dirname(__file__), "static_frontend")
 
 if os.path.isdir(FRONTEND_DIR):
-    # Serve static assets (JS, CSS, images)
-    app.mount("/assets", StaticFiles(directory=os.path.join(FRONTEND_DIR, "assets")), name="frontend_assets")
+    ASSETS_DIR = os.path.join(FRONTEND_DIR, "assets")
+    if os.path.isdir(ASSETS_DIR):
+        app.mount("/assets", StaticFiles(directory=ASSETS_DIR), name="frontend_assets")
 
     @app.get("/")
-    @app.get("/{full_path:path}")
-    def serve_spa(full_path: str = ""):
-        """
-        Catch-all: serves index.html for any route not matched by the API.
-        This enables React Router to handle client-side navigation.
-        """
-        # Don't intercept API routes
-        if full_path.startswith("api/") or full_path.startswith("proyectos/") or full_path.startswith("documentos/"):
-            from fastapi import HTTPException
-            raise HTTPException(status_code=404)
+    def serve_root():
+        """Serve the React SPA root."""
         index = os.path.join(FRONTEND_DIR, "index.html")
         if os.path.exists(index):
             return FileResponse(index)
         return {"message": "Frontend not built. Run: npm run build in /frontend"}
+
+    @app.get("/{full_path:path}")
+    def serve_spa(full_path: str):
+        """
+        Catch-all: serves index.html for any React Router path.
+        API and static routes are matched first by FastAPI before this catches anything.
+        """
+        index = os.path.join(FRONTEND_DIR, "index.html")
+        if os.path.exists(index):
+            return FileResponse(index)
+        from fastapi import HTTPException
+        raise HTTPException(status_code=404, detail="Not found")
