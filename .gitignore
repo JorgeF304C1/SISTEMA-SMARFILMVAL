@@ -19,10 +19,14 @@ coverage.xml
 
 # Node / React
 node_modules/
-dist/
 dist-ssr/
 *.local
 .eslintcache
+
+# PyInstaller build artifacts (generated, not source)
+backend/build/
+backend/dist/
+backend/static_frontend/
 
 # Project Specific
 local_storage/
