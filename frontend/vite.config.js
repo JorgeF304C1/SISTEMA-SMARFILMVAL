@@ -14,15 +14,9 @@ export default defineConfig({
     // Output the built frontend into the backend folder so PyInstaller can bundle everything together
     outDir: '../backend/static_frontend',
     emptyOutDir: true,
-    // Use a broadly compatible target for the embedded browser (WebView2 on Windows, Safari on macOS)
+    // Use a broadly compatible target for the embedded browser
     target: 'es2020',
-    minify: 'esbuild',
+    minify: true,
     sourcemap: false,
-    rollupOptions: {
-      output: {
-        // Ensure chunk filenames don't have hash issues
-        manualChunks: undefined,
-      }
-    }
   },
 })

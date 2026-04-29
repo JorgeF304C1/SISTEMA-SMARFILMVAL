@@ -1,93 +1,100 @@
 """
-launcher.py — SmartFilm Valencia Desktop Launcher
-Este es el punto de entrada del ejecutable (.exe en Windows, app en macOS).
+launcher.py — Smart Film Valencia Desktop App
+Punto de entrada del ejecutable. Crea una ventana nativa del sistema operativo
+usando pywebview. No requiere navegador ni internet.
 
-Al ejecutarse:
-1. Arranca el servidor FastAPI en el puerto 8000 (en un hilo separado)
-2. Espera a que el servidor esté listo
-3. Abre el navegador del sistema apuntando a http://localhost:8000
-4. Permanece activo hasta que el usuario cierre la ventana del terminal/app
+Windows: usa WebView2 (integrado en Win10/11)
+macOS:   usa WebKit  (integrado en macOS)
 """
 import sys
 import os
 import time
 import threading
-import webbrowser
-import subprocess
 import socket
-import signal
+
+# ── Resolve paths ──────────────────────────────────────────────────────────────
+if getattr(sys, 'frozen', False):
+    # PyInstaller: el .exe está aquí, los archivos empaquetados en _MEIPASS
+    APP_DIR      = os.path.dirname(sys.executable)
+    INTERNAL_DIR = sys._MEIPASS
+else:
+    # Dev mode
+    APP_DIR      = os.path.dirname(os.path.abspath(__file__))
+    INTERNAL_DIR = APP_DIR
+
+# La base de datos y local_storage viven JUNTO al .exe (no en _MEIPASS)
+os.chdir(APP_DIR)
 
 PORT = 8000
 HOST = "127.0.0.1"
+URL  = f"http://{HOST}:{PORT}"
 
-# ── Resolve paths ─────────────────────────────────────────────────────────────
-if getattr(sys, 'frozen', False):
-    # PyInstaller: los archivos están en _MEIPASS (temp) pero el .exe está aquí
-    BASE_DIR = os.path.dirname(sys.executable)
-    INTERNAL_DIR = sys._MEIPASS
-else:
-    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-    INTERNAL_DIR = BASE_DIR
 
-# Asegurar que la base de datos y local_storage vivan junto al .exe
-os.chdir(BASE_DIR)
-
-# ── Wait for server to be ready ────────────────────────────────────────────────
 def wait_for_server(host: str, port: int, timeout: int = 30) -> bool:
-    """Espera hasta que el servidor acepte conexiones TCP."""
+    """Espera hasta que el servidor FastAPI acepte conexiones."""
     start = time.time()
     while time.time() - start < timeout:
         try:
             with socket.create_connection((host, port), timeout=1):
                 return True
         except (ConnectionRefusedError, OSError):
-            time.sleep(0.3)
+            time.sleep(0.25)
     return False
 
-# ── Start FastAPI server ───────────────────────────────────────────────────────
-def start_server():
-    """Arranca uvicorn con la app FastAPI."""
+
+def start_api_server():
+    """Arranca FastAPI + uvicorn en un hilo de fondo."""
     import uvicorn
     uvicorn.run(
         "app.main:app",
         host=HOST,
         port=PORT,
         log_level="warning",
-        # No reload en producción
         reload=False,
     )
 
-# ── Main ──────────────────────────────────────────────────────────────────────
-def main():
-    print("=" * 50)
-    print("  Smart Film Valencia — Iniciando sistema...")
-    print("=" * 50)
 
-    # Iniciar servidor en hilo de fondo
-    server_thread = threading.Thread(target=start_server, daemon=True)
+def main():
+    import webview
+
+    # 1) Arrancar el servidor API en segundo plano
+    server_thread = threading.Thread(target=start_api_server, daemon=True)
     server_thread.start()
 
-    # Esperar a que el servidor esté listo
-    print(f"  Esperando servidor en http://{HOST}:{PORT}...")
-    if wait_for_server(HOST, PORT, timeout=30):
-        url = f"http://{HOST}:{PORT}"
-        print(f"  ✅ Servidor listo. Abriendo {url}")
-        # Abrir el navegador predeterminado del sistema
-        webbrowser.open(url)
+    # 2) Esperar a que el servidor esté listo
+    ready = wait_for_server(HOST, PORT, timeout=30)
+    if not ready:
+        # Si el servidor no arrancó, mostrar error en la ventana
+        url = None
+        html = """
+        <html><body style="background:#0f172a;color:white;font-family:Arial;
+                           display:flex;align-items:center;justify-content:center;
+                           height:100vh;margin:0;flex-direction:column;">
+          <h2>&#10060; Error al iniciar el servidor interno</h2>
+          <p style="color:#94a3b8;">Intenta reiniciar la aplicación.</p>
+        </body></html>
+        """
     else:
-        print("  ❌ El servidor no respondió a tiempo.")
-        print("     Abre manualmente: http://localhost:8000")
+        url  = URL
+        html = None
 
-    print("  Sistema activo. Cierra esta ventana para apagar el servidor.")
-    print("=" * 50)
+    # 3) Crear la ventana nativa del sistema operativo
+    window = webview.create_window(
+        title      = "Smart Film Valencia",
+        url        = url,
+        html       = html,
+        width      = 1280,
+        height     = 800,
+        min_size   = (1024, 680),
+        resizable  = True,
+        # Sin barra de herramientas de navegador, sin URL visible
+        # Es una ventana de aplicación, no un navegador
+    )
 
-    # Mantener vivo el proceso principal
-    try:
-        while server_thread.is_alive():
-            time.sleep(1)
-    except KeyboardInterrupt:
-        print("\n  Apagando Smart Film Valencia...")
-        sys.exit(0)
+    # 4) Iniciar pywebview — esto bloquea hasta que el usuario cierra la ventana
+    # Al cerrar la ventana, el proceso principal termina y el servidor (daemon) muere con él
+    webview.start(debug=False)
+
 
 if __name__ == "__main__":
     main()

@@ -1,22 +1,27 @@
 # smartfilm.spec — PyInstaller build specification
-# Run with: pyinstaller smartfilm.spec
+# Genera una app de escritorio nativa con pywebview (sin navegador, sin internet)
 #
-# Output: dist/SmartFilm_Valencia/SmartFilm_Valencia.exe (Windows)
-#          dist/SmartFilm_Valencia/SmartFilm_Valencia      (macOS/Linux)
+# Windows: SmartFilm_Valencia.exe  (usa WebView2 — ya incluido en Win10/11)
+# macOS:   SmartFilm_Valencia.app  (usa WebKit  — incluido en macOS)
+#
+# Para compilar:
+#   Windows: .\venv\Scripts\pyinstaller.exe smartfilm.spec --noconfirm
+#   macOS:   ./venv/bin/pyinstaller smartfilm.spec --noconfirm
 
 import os
-from PyInstaller.utils.hooks import collect_all
+import sys
 
 block_cipher = None
 
-# Collect all data files needed by FastAPI and its dependencies
+# ── Data files to bundle ───────────────────────────────────────────────────────
 datas = [
-    # The compiled React frontend (must run `npm run build` first)
+    # Compiled React frontend (run `npm run build` first)
     ('static_frontend', 'static_frontend'),
 ]
 
-# Collect hidden imports that PyInstaller misses
+# ── Hidden imports (modules PyInstaller misses via static analysis) ─────────────
 hiddenimports = [
+    # uvicorn internals
     'uvicorn.logging',
     'uvicorn.loops',
     'uvicorn.loops.auto',
@@ -27,18 +32,31 @@ hiddenimports = [
     'uvicorn.protocols.websockets.auto',
     'uvicorn.lifespan',
     'uvicorn.lifespan.on',
+    # async
     'anyio',
     'anyio.from_thread',
+    # fastapi / starlette
     'starlette.routing',
     'fastapi.middleware.cors',
+    # database
     'sqlalchemy.dialects.sqlite',
     'sqlalchemy.dialects.sqlite.pysqlite',
+    # auth
     'passlib.handlers.bcrypt',
     'bcrypt',
     'jose',
-    'email_validator',
+    # multipart
     'multipart',
     'python_multipart',
+    # pywebview — Windows (WebView2 via pythonnet/clr)
+    'webview',
+    'webview.platforms.winforms',
+    'clr_loader',
+    'pythonnet',
+    # pywebview — macOS (WebKit)
+    'webview.platforms.cocoa',
+    # pywebview — Linux fallback
+    'webview.platforms.gtk',
 ]
 
 a = Analysis(
@@ -82,12 +100,14 @@ exe = EXE(
     bootloader_ignore_signals=False,
     strip=False,
     upx=True,
-    console=True,          # True = muestra ventana de terminal (útil para ver logs)
+    # console=False → sin ventana de terminal negra al abrir el .exe
+    console=False,
     disable_windowed_traceback=False,
     target_arch=None,
     codesign_identity=None,
     entitlements_file=None,
-    # icon='static_frontend/favicon.ico',   # Descomenta si tienes .ico
+    # Descomenta y ajusta si tienes un .ico para el ícono del .exe:
+    # icon='assets/icon.ico',
 )
 
 coll = COLLECT(
