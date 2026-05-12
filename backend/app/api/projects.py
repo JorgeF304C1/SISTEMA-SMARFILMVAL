@@ -120,7 +120,11 @@ def get_dashboard(db: Session = Depends(get_db)):
     for p in projects:
         true_linear_meters, _, total_installed_area, total_material_area, _, _ = calculate_consumption(p.areas, p.roll_width)
         income = true_linear_meters * p.price_per_ml
+<<<<<<< HEAD
         material_cost = true_linear_meters * p.base_cost_per_ml
+=======
+        material_cost = total_material_area * p.base_cost_per_sqm
+>>>>>>> 40a974469c9148ed5df7c24d9624ca3be7e2ff39
         labor_cost = total_installed_area * p.labor_cost_per_sqm
         
         if p.status == "Completado":
@@ -284,7 +288,12 @@ def get_project_detail(project_id: int, db: Session = Depends(get_db)):
     true_linear_meters, rows, total_installed_area, total_material_area, waste_m2, efficiency = calculate_consumption(project.areas, project.roll_width)
     total_income = true_linear_meters * project.price_per_ml
 
+<<<<<<< HEAD
     material_cost = true_linear_meters * project.base_cost_per_ml
+=======
+    # Calculate base material cost dynamically using total consumed area
+    material_cost = total_material_area * project.base_cost_per_sqm
+>>>>>>> 40a974469c9148ed5df7c24d9624ca3be7e2ff39
     labor_cost = total_installed_area * project.labor_cost_per_sqm
     
     total_expenses = sum(e.amount for e in project.expenses if not e.is_nullified)
