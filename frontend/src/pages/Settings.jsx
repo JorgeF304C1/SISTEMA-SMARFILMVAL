@@ -8,7 +8,11 @@ export default function Settings() {
   const [settings, setSettings] = useState({
     default_price_per_ml: 200,
     default_roll_width: 1.5,
+<<<<<<< HEAD
     default_base_cost_per_ml: 110.0,
+=======
+    default_base_cost_per_sqm: 70.0,
+>>>>>>> 40a974469c9148ed5df7c24d9624ca3be7e2ff39
     default_labor_cost_per_sqm: 15.0,
     delivery_note_warranty_months: 3
   });
