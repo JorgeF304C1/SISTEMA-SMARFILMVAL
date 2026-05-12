@@ -83,7 +83,7 @@
  [],
  False,
  False,
- 1777432751,
+ 1777730148,
  [('runw.exe',
    'C:\\Users\\jorge\\Documents\\SISTEMA '
    'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\PyInstaller\\bootloader\\Windows-64bit-intel\\runw.exe',

@@ -55,17 +55,17 @@
  {},
  0,
  [],
- [('static_frontend\\assets\\html2pdf-NgSKRkVC.js',
+ [('static_frontend\\assets\\html2pdf-Cuu9kNIz.js',
    'C:\\Users\\jorge\\Documents\\SISTEMA '
-   'SMARFILMVAL\\backend\\static_frontend\\assets\\html2pdf-NgSKRkVC.js',
+   'SMARFILMVAL\\backend\\static_frontend\\assets\\html2pdf-Cuu9kNIz.js',
    'DATA'),
   ('static_frontend\\assets\\index-BLx8oa7L.css',
    'C:\\Users\\jorge\\Documents\\SISTEMA '
    'SMARFILMVAL\\backend\\static_frontend\\assets\\index-BLx8oa7L.css',
    'DATA'),
-  ('static_frontend\\assets\\index-CNjZqgXD.js',
+  ('static_frontend\\assets\\index-D015Thiq.js',
    'C:\\Users\\jorge\\Documents\\SISTEMA '
-   'SMARFILMVAL\\backend\\static_frontend\\assets\\index-CNjZqgXD.js',
+   'SMARFILMVAL\\backend\\static_frontend\\assets\\index-D015Thiq.js',
    'DATA'),
   ('static_frontend\\favicon.svg',
    'C:\\Users\\jorge\\Documents\\SISTEMA '
@@ -82,6 +82,38 @@
   ('static_frontend\\logo.png',
    'C:\\Users\\jorge\\Documents\\SISTEMA '
    'SMARFILMVAL\\backend\\static_frontend\\logo.png',
+   'DATA'),
+  ('webview\\lib\\Microsoft.Web.WebView2.Core.dll',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\webview\\lib\\Microsoft.Web.WebView2.Core.dll',
+   'DATA'),
+  ('webview\\lib\\Microsoft.Web.WebView2.WinForms.dll',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\webview\\lib\\Microsoft.Web.WebView2.WinForms.dll',
+   'DATA'),
+  ('webview\\lib\\WebBrowserInterop.x64.dll',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\webview\\lib\\WebBrowserInterop.x64.dll',
+   'DATA'),
+  ('webview\\lib\\WebBrowserInterop.x86.dll',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\webview\\lib\\WebBrowserInterop.x86.dll',
+   'DATA'),
+  ('webview\\lib\\pywebview-android.jar',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\webview\\lib\\pywebview-android.jar',
+   'DATA'),
+  ('webview\\lib\\runtimes\\win-arm64\\native\\WebView2Loader.dll',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\webview\\lib\\runtimes\\win-arm64\\native\\WebView2Loader.dll',
+   'DATA'),
+  ('webview\\lib\\runtimes\\win-x64\\native\\WebView2Loader.dll',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\webview\\lib\\runtimes\\win-x64\\native\\WebView2Loader.dll',
+   'DATA'),
+  ('webview\\lib\\runtimes\\win-x86\\native\\WebView2Loader.dll',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\webview\\lib\\runtimes\\win-x86\\native\\WebView2Loader.dll',
    'DATA')],
  '3.13.5 (tags/v3.13.5:6cb20a2, Jun 11 2025, 16:15:46) [MSC v.1943 64 bit '
  '(AMD64)]',
@@ -2998,6 +3030,26 @@
    'C:\\Users\\jorge\\Documents\\SISTEMA '
    'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\pydantic\\v1\\env_settings.py',
    'PYMODULE'),
+  ('dotenv',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\dotenv\\__init__.py',
+   'PYMODULE'),
+  ('dotenv.ipython',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\dotenv\\ipython.py',
+   'PYMODULE'),
+  ('dotenv.main',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\dotenv\\main.py',
+   'PYMODULE'),
+  ('dotenv.variables',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\dotenv\\variables.py',
+   'PYMODULE'),
+  ('dotenv.parser',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\dotenv\\parser.py',
+   'PYMODULE'),
   ('pydantic.v1.decorator',
    'C:\\Users\\jorge\\Documents\\SISTEMA '
    'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\pydantic\\v1\\decorator.py',
@@ -3629,6 +3681,26 @@
    'C:\\Users\\jorge\\Documents\\SISTEMA '
    'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\uvicorn\\protocols\\websockets\\websockets_sansio_impl.py',
    'PYMODULE'),
+  ('websockets.http11',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\websockets\\http11.py',
+   'PYMODULE'),
+  ('websockets.version',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\websockets\\version.py',
+   'PYMODULE'),
+  ('websockets.frames',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\websockets\\frames.py',
+   'PYMODULE'),
+  ('websockets.extensions',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\websockets\\extensions\\__init__.py',
+   'PYMODULE'),
+  ('websockets.utils',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\websockets\\utils.py',
+   'PYMODULE'),
   ('uvicorn.protocols.http.httptools_impl',
    'C:\\Users\\jorge\\Documents\\SISTEMA '
    'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\uvicorn\\protocols\\http\\httptools_impl.py',
@@ -3636,6 +3708,26 @@
   ('uvicorn.protocols.http.flow_control',
    'C:\\Users\\jorge\\Documents\\SISTEMA '
    'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\uvicorn\\protocols\\http\\flow_control.py',
+   'PYMODULE'),
+  ('httptools',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\httptools\\__init__.py',
+   'PYMODULE'),
+  ('httptools._version',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\httptools\\_version.py',
+   'PYMODULE'),
+  ('httptools.parser',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\httptools\\parser\\__init__.py',
+   'PYMODULE'),
+  ('httptools.parser.errors',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\httptools\\parser\\errors.py',
+   'PYMODULE'),
+  ('httptools.parser.protocol',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\httptools\\parser\\protocol.py',
    'PYMODULE'),
   ('uvicorn.protocols.http.h11_impl',
    'C:\\Users\\jorge\\Documents\\SISTEMA '
@@ -3788,6 +3880,74 @@
    'C:\\Users\\jorge\\Documents\\SISTEMA '
    'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\uvicorn\\config.py',
    'PYMODULE'),
+  ('yaml',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\yaml\\__init__.py',
+   'PYMODULE'),
+  ('yaml.cyaml',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\yaml\\cyaml.py',
+   'PYMODULE'),
+  ('yaml.resolver',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\yaml\\resolver.py',
+   'PYMODULE'),
+  ('yaml.representer',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\yaml\\representer.py',
+   'PYMODULE'),
+  ('yaml.serializer',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\yaml\\serializer.py',
+   'PYMODULE'),
+  ('yaml.constructor',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\yaml\\constructor.py',
+   'PYMODULE'),
+  ('yaml.dumper',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\yaml\\dumper.py',
+   'PYMODULE'),
+  ('yaml.emitter',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\yaml\\emitter.py',
+   'PYMODULE'),
+  ('yaml.loader',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\yaml\\loader.py',
+   'PYMODULE'),
+  ('yaml.composer',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\yaml\\composer.py',
+   'PYMODULE'),
+  ('yaml.parser',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\yaml\\parser.py',
+   'PYMODULE'),
+  ('yaml.scanner',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\yaml\\scanner.py',
+   'PYMODULE'),
+  ('yaml.reader',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\yaml\\reader.py',
+   'PYMODULE'),
+  ('yaml.nodes',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\yaml\\nodes.py',
+   'PYMODULE'),
+  ('yaml.events',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\yaml\\events.py',
+   'PYMODULE'),
+  ('yaml.tokens',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\yaml\\tokens.py',
+   'PYMODULE'),
+  ('yaml.error',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\yaml\\error.py',
+   'PYMODULE'),
   ('uvicorn.middleware.wsgi',
    'C:\\Users\\jorge\\Documents\\SISTEMA '
    'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\uvicorn\\middleware\\wsgi.py',
@@ -3821,9 +3981,181 @@
   ('smtplib',
    'C:\\Users\\jorge\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\smtplib.py',
    'PYMODULE'),
+  ('websockets.typing',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\websockets\\typing.py',
+   'PYMODULE'),
+  ('websockets.server',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\websockets\\server.py',
+   'PYMODULE'),
+  ('websockets.protocol',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\websockets\\protocol.py',
+   'PYMODULE'),
+  ('websockets.streams',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\websockets\\streams.py',
+   'PYMODULE'),
+  ('websockets.imports',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\websockets\\imports.py',
+   'PYMODULE'),
+  ('websockets.headers',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\websockets\\headers.py',
+   'PYMODULE'),
+  ('websockets.legacy.server',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\websockets\\legacy\\server.py',
+   'PYMODULE'),
+  ('websockets.legacy',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\websockets\\legacy\\__init__.py',
+   'PYMODULE'),
+  ('websockets.legacy.protocol',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\websockets\\legacy\\protocol.py',
+   'PYMODULE'),
+  ('websockets.legacy.framing',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\websockets\\legacy\\framing.py',
+   'PYMODULE'),
+  ('websockets.legacy.http',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\websockets\\legacy\\http.py',
+   'PYMODULE'),
+  ('websockets.legacy.exceptions',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\websockets\\legacy\\exceptions.py',
+   'PYMODULE'),
+  ('websockets.asyncio.compatibility',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\websockets\\asyncio\\compatibility.py',
+   'PYMODULE'),
+  ('websockets.asyncio',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\websockets\\asyncio\\__init__.py',
+   'PYMODULE'),
+  ('websockets.asyncio.async_timeout',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\websockets\\asyncio\\async_timeout.py',
+   'PYMODULE'),
+  ('websockets.extensions.permessage_deflate',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\websockets\\extensions\\permessage_deflate.py',
+   'PYMODULE'),
+  ('websockets.extensions.base',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\websockets\\extensions\\base.py',
+   'PYMODULE'),
+  ('websockets.exceptions',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\websockets\\exceptions.py',
+   'PYMODULE'),
+  ('websockets.datastructures',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\websockets\\datastructures.py',
+   'PYMODULE'),
+  ('websockets.legacy.handshake',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\websockets\\legacy\\handshake.py',
+   'PYMODULE'),
   ('uvicorn.protocols.websockets.wsproto_impl',
    'C:\\Users\\jorge\\Documents\\SISTEMA '
    'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\uvicorn\\protocols\\websockets\\wsproto_impl.py',
+   'PYMODULE'),
+  ('websockets',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\websockets\\__init__.py',
+   'PYMODULE'),
+  ('websockets.uri',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\websockets\\uri.py',
+   'PYMODULE'),
+  ('websockets.sync.utils',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\websockets\\sync\\utils.py',
+   'PYMODULE'),
+  ('websockets.sync.server',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\websockets\\sync\\server.py',
+   'PYMODULE'),
+  ('websockets.sync.router',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\websockets\\sync\\router.py',
+   'PYMODULE'),
+  ('websockets.sync.messages',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\websockets\\sync\\messages.py',
+   'PYMODULE'),
+  ('websockets.sync.connection',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\websockets\\sync\\connection.py',
+   'PYMODULE'),
+  ('websockets.sync.client',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\websockets\\sync\\client.py',
+   'PYMODULE'),
+  ('websockets.sync',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\websockets\\sync\\__init__.py',
+   'PYMODULE'),
+  ('websockets.proxy',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\websockets\\proxy.py',
+   'PYMODULE'),
+  ('websockets.legacy.client',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\websockets\\legacy\\client.py',
+   'PYMODULE'),
+  ('websockets.legacy.auth',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\websockets\\legacy\\auth.py',
+   'PYMODULE'),
+  ('websockets.http',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\websockets\\http.py',
+   'PYMODULE'),
+  ('websockets.connection',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\websockets\\connection.py',
+   'PYMODULE'),
+  ('websockets.cli',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\websockets\\cli.py',
+   'PYMODULE'),
+  ('websockets.auth',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\websockets\\auth.py',
+   'PYMODULE'),
+  ('websockets.asyncio.messages',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\websockets\\asyncio\\messages.py',
+   'PYMODULE'),
+  ('websockets.asyncio.connection',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\websockets\\asyncio\\connection.py',
+   'PYMODULE'),
+  ('websockets.__main__',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\websockets\\__main__.py',
+   'PYMODULE'),
+  ('websockets.client',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\websockets\\client.py',
+   'PYMODULE'),
+  ('websockets.asyncio.server',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\websockets\\asyncio\\server.py',
+   'PYMODULE'),
+  ('websockets.asyncio.router',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\websockets\\asyncio\\router.py',
+   'PYMODULE'),
+  ('websockets.asyncio.client',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\websockets\\asyncio\\client.py',
    'PYMODULE'),
   ('uvicorn.protocols.websockets',
    'C:\\Users\\jorge\\Documents\\SISTEMA '
@@ -3979,6 +4311,26 @@
    'C:\\Users\\jorge\\Documents\\SISTEMA '
    'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\uvicorn\\supervisors\\watchfilesreload.py',
    'PYMODULE'),
+  ('watchfiles',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\watchfiles\\__init__.py',
+   'PYMODULE'),
+  ('watchfiles.version',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\watchfiles\\version.py',
+   'PYMODULE'),
+  ('watchfiles.run',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\watchfiles\\run.py',
+   'PYMODULE'),
+  ('watchfiles.main',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\watchfiles\\main.py',
+   'PYMODULE'),
+  ('watchfiles.filters',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\watchfiles\\filters.py',
+   'PYMODULE'),
   ('uvicorn.supervisors.statreload',
    'C:\\Users\\jorge\\Documents\\SISTEMA '
    'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\uvicorn\\supervisors\\statreload.py',
@@ -4024,6 +4376,18 @@
    'C:\\Users\\jorge\\Documents\\SISTEMA '
    'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\webview\\lib\\Microsoft.Web.WebView2.Core.dll',
    'BINARY'),
+  ('webview\\lib\\Microsoft.Web.WebView2.WinForms.dll',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\webview\\lib\\Microsoft.Web.WebView2.WinForms.dll',
+   'BINARY'),
+  ('webview\\lib\\WebBrowserInterop.x64.dll',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\webview\\lib\\WebBrowserInterop.x64.dll',
+   'BINARY'),
+  ('webview\\lib\\WebBrowserInterop.x86.dll',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\webview\\lib\\WebBrowserInterop.x86.dll',
+   'BINARY'),
   ('webview\\lib\\runtimes\\win-arm64\\native\\WebView2Loader.dll',
    'C:\\Users\\jorge\\Documents\\SISTEMA '
    'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\webview\\lib\\runtimes\\win-arm64\\native\\WebView2Loader.dll',
@@ -4031,18 +4395,6 @@
   ('webview\\lib\\runtimes\\win-x64\\native\\WebView2Loader.dll',
    'C:\\Users\\jorge\\Documents\\SISTEMA '
    'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\webview\\lib\\runtimes\\win-x64\\native\\WebView2Loader.dll',
-   'BINARY'),
-  ('webview\\lib\\Microsoft.Web.WebView2.WinForms.dll',
-   'C:\\Users\\jorge\\Documents\\SISTEMA '
-   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\webview\\lib\\Microsoft.Web.WebView2.WinForms.dll',
-   'BINARY'),
-  ('webview\\lib\\WebBrowserInterop.x86.dll',
-   'C:\\Users\\jorge\\Documents\\SISTEMA '
-   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\webview\\lib\\WebBrowserInterop.x86.dll',
-   'BINARY'),
-  ('webview\\lib\\WebBrowserInterop.x64.dll',
-   'C:\\Users\\jorge\\Documents\\SISTEMA '
-   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\webview\\lib\\WebBrowserInterop.x64.dll',
    'BINARY'),
   ('webview\\lib\\runtimes\\win-x86\\native\\WebView2Loader.dll',
    'C:\\Users\\jorge\\Documents\\SISTEMA '
@@ -4055,13 +4407,13 @@
    'C:\\Users\\jorge\\Documents\\SISTEMA '
    'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\pythonnet\\runtime\\Python.Runtime.dll',
    'BINARY'),
-  ('clr_loader\\ffi\\dlls\\x86\\ClrLoader.dll',
-   'C:\\Users\\jorge\\Documents\\SISTEMA '
-   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\clr_loader\\ffi\\dlls\\x86\\ClrLoader.dll',
-   'BINARY'),
   ('clr_loader\\ffi\\dlls\\amd64\\ClrLoader.dll',
    'C:\\Users\\jorge\\Documents\\SISTEMA '
    'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\clr_loader\\ffi\\dlls\\amd64\\ClrLoader.dll',
+   'BINARY'),
+  ('clr_loader\\ffi\\dlls\\x86\\ClrLoader.dll',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\clr_loader\\ffi\\dlls\\x86\\ClrLoader.dll',
    'BINARY'),
   ('_lzma.pyd',
    'C:\\Users\\jorge\\AppData\\Local\\Programs\\Python\\Python313\\DLLs\\_lzma.pyd',
@@ -4156,6 +4508,26 @@
    'C:\\Users\\jorge\\Documents\\SISTEMA '
    'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\pydantic_core\\_pydantic_core.cp313-win_amd64.pyd',
    'EXTENSION'),
+  ('websockets\\speedups.cp313-win_amd64.pyd',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\websockets\\speedups.cp313-win_amd64.pyd',
+   'EXTENSION'),
+  ('httptools\\parser\\url_parser.cp313-win_amd64.pyd',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\httptools\\parser\\url_parser.cp313-win_amd64.pyd',
+   'EXTENSION'),
+  ('httptools\\parser\\parser.cp313-win_amd64.pyd',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\httptools\\parser\\parser.cp313-win_amd64.pyd',
+   'EXTENSION'),
+  ('yaml\\_yaml.cp313-win_amd64.pyd',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\yaml\\_yaml.cp313-win_amd64.pyd',
+   'EXTENSION'),
+  ('watchfiles\\_rust_notify.cp313-win_amd64.pyd',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\watchfiles\\_rust_notify.cp313-win_amd64.pyd',
+   'EXTENSION'),
   ('VCRUNTIME140.dll',
    'C:\\Users\\jorge\\AppData\\Local\\Programs\\Python\\Python313\\VCRUNTIME140.dll',
    'BINARY'),
@@ -4180,17 +4552,17 @@
   ('MSVCP140.dll', 'C:\\Windows\\system32\\MSVCP140.dll', 'BINARY')],
  [],
  [],
- [('static_frontend\\assets\\html2pdf-NgSKRkVC.js',
+ [('static_frontend\\assets\\html2pdf-Cuu9kNIz.js',
    'C:\\Users\\jorge\\Documents\\SISTEMA '
-   'SMARFILMVAL\\backend\\static_frontend\\assets\\html2pdf-NgSKRkVC.js',
+   'SMARFILMVAL\\backend\\static_frontend\\assets\\html2pdf-Cuu9kNIz.js',
    'DATA'),
   ('static_frontend\\assets\\index-BLx8oa7L.css',
    'C:\\Users\\jorge\\Documents\\SISTEMA '
    'SMARFILMVAL\\backend\\static_frontend\\assets\\index-BLx8oa7L.css',
    'DATA'),
-  ('static_frontend\\assets\\index-CNjZqgXD.js',
+  ('static_frontend\\assets\\index-D015Thiq.js',
    'C:\\Users\\jorge\\Documents\\SISTEMA '
-   'SMARFILMVAL\\backend\\static_frontend\\assets\\index-CNjZqgXD.js',
+   'SMARFILMVAL\\backend\\static_frontend\\assets\\index-D015Thiq.js',
    'DATA'),
   ('static_frontend\\favicon.svg',
    'C:\\Users\\jorge\\Documents\\SISTEMA '
@@ -4208,25 +4580,9 @@
    'C:\\Users\\jorge\\Documents\\SISTEMA '
    'SMARFILMVAL\\backend\\static_frontend\\logo.png',
    'DATA'),
-  ('setuptools\\_vendor\\importlib_metadata-8.7.1.dist-info\\top_level.txt',
+  ('webview\\lib\\pywebview-android.jar',
    'C:\\Users\\jorge\\Documents\\SISTEMA '
-   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\setuptools\\_vendor\\importlib_metadata-8.7.1.dist-info\\top_level.txt',
-   'DATA'),
-  ('setuptools\\_vendor\\importlib_metadata-8.7.1.dist-info\\RECORD',
-   'C:\\Users\\jorge\\Documents\\SISTEMA '
-   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\setuptools\\_vendor\\importlib_metadata-8.7.1.dist-info\\RECORD',
-   'DATA'),
-  ('setuptools\\_vendor\\importlib_metadata-8.7.1.dist-info\\licenses\\LICENSE',
-   'C:\\Users\\jorge\\Documents\\SISTEMA '
-   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\setuptools\\_vendor\\importlib_metadata-8.7.1.dist-info\\licenses\\LICENSE',
-   'DATA'),
-  ('setuptools\\_vendor\\importlib_metadata-8.7.1.dist-info\\INSTALLER',
-   'C:\\Users\\jorge\\Documents\\SISTEMA '
-   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\setuptools\\_vendor\\importlib_metadata-8.7.1.dist-info\\INSTALLER',
-   'DATA'),
-  ('setuptools\\_vendor\\importlib_metadata-8.7.1.dist-info\\METADATA',
-   'C:\\Users\\jorge\\Documents\\SISTEMA '
-   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\setuptools\\_vendor\\importlib_metadata-8.7.1.dist-info\\METADATA',
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\webview\\lib\\pywebview-android.jar',
    'DATA'),
   ('setuptools\\_vendor\\importlib_metadata-8.7.1.dist-info\\WHEEL',
    'C:\\Users\\jorge\\Documents\\SISTEMA '
@@ -4236,104 +4592,163 @@
    'C:\\Users\\jorge\\Documents\\SISTEMA '
    'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\setuptools\\_vendor\\importlib_metadata-8.7.1.dist-info\\REQUESTED',
    'DATA'),
+  ('setuptools\\_vendor\\importlib_metadata-8.7.1.dist-info\\top_level.txt',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\setuptools\\_vendor\\importlib_metadata-8.7.1.dist-info\\top_level.txt',
+   'DATA'),
+  ('setuptools\\_vendor\\importlib_metadata-8.7.1.dist-info\\INSTALLER',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\setuptools\\_vendor\\importlib_metadata-8.7.1.dist-info\\INSTALLER',
+   'DATA'),
+  ('setuptools\\_vendor\\importlib_metadata-8.7.1.dist-info\\RECORD',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\setuptools\\_vendor\\importlib_metadata-8.7.1.dist-info\\RECORD',
+   'DATA'),
+  ('setuptools\\_vendor\\importlib_metadata-8.7.1.dist-info\\licenses\\LICENSE',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\setuptools\\_vendor\\importlib_metadata-8.7.1.dist-info\\licenses\\LICENSE',
+   'DATA'),
+  ('setuptools\\_vendor\\importlib_metadata-8.7.1.dist-info\\METADATA',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\setuptools\\_vendor\\importlib_metadata-8.7.1.dist-info\\METADATA',
+   'DATA'),
   ('setuptools\\_vendor\\jaraco\\text\\Lorem ipsum.txt',
    'C:\\Users\\jorge\\Documents\\SISTEMA '
    'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\setuptools\\_vendor\\jaraco\\text\\Lorem '
    'ipsum.txt',
    'DATA'),
-  ('webview\\js\\lib\\dom_json.js',
-   'C:\\Users\\jorge\\Documents\\SISTEMA '
-   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\webview\\js\\lib\\dom_json.js',
-   'DATA'),
   ('webview\\js\\state.js',
    'C:\\Users\\jorge\\Documents\\SISTEMA '
    'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\webview\\js\\state.js',
    'DATA'),
-  ('webview\\js\\lib\\polyfill.js',
+  ('webview\\js\\lib\\dom_json.js',
    'C:\\Users\\jorge\\Documents\\SISTEMA '
-   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\webview\\js\\lib\\polyfill.js',
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\webview\\js\\lib\\dom_json.js',
    'DATA'),
   ('webview\\js\\finish.js',
    'C:\\Users\\jorge\\Documents\\SISTEMA '
    'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\webview\\js\\finish.js',
    'DATA'),
-  ('webview\\lib\\pywebview-android.jar',
+  ('webview\\js\\api.js',
    'C:\\Users\\jorge\\Documents\\SISTEMA '
-   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\webview\\lib\\pywebview-android.jar',
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\webview\\js\\api.js',
+   'DATA'),
+  ('webview\\js\\lib\\polyfill.js',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\webview\\js\\lib\\polyfill.js',
    'DATA'),
   ('webview\\js\\customize.js',
    'C:\\Users\\jorge\\Documents\\SISTEMA '
    'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\webview\\js\\customize.js',
    'DATA'),
-  ('webview\\js\\api.js',
+  ('pydantic-2.12.5.dist-info\\WHEEL',
    'C:\\Users\\jorge\\Documents\\SISTEMA '
-   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\webview\\js\\api.js',
-   'DATA'),
-  ('click-8.3.1.dist-info\\licenses\\LICENSE.txt',
-   'C:\\Users\\jorge\\Documents\\SISTEMA '
-   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\click-8.3.1.dist-info\\licenses\\LICENSE.txt',
-   'DATA'),
-  ('pydantic-2.12.5.dist-info\\RECORD',
-   'C:\\Users\\jorge\\Documents\\SISTEMA '
-   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\pydantic-2.12.5.dist-info\\RECORD',
-   'DATA'),
-  ('click-8.3.1.dist-info\\RECORD',
-   'C:\\Users\\jorge\\Documents\\SISTEMA '
-   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\click-8.3.1.dist-info\\RECORD',
-   'DATA'),
-  ('pydantic-2.12.5.dist-info\\INSTALLER',
-   'C:\\Users\\jorge\\Documents\\SISTEMA '
-   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\pydantic-2.12.5.dist-info\\INSTALLER',
-   'DATA'),
-  ('pydantic-2.12.5.dist-info\\REQUESTED',
-   'C:\\Users\\jorge\\Documents\\SISTEMA '
-   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\pydantic-2.12.5.dist-info\\REQUESTED',
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\pydantic-2.12.5.dist-info\\WHEEL',
    'DATA'),
   ('pydantic-2.12.5.dist-info\\METADATA',
    'C:\\Users\\jorge\\Documents\\SISTEMA '
    'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\pydantic-2.12.5.dist-info\\METADATA',
    'DATA'),
-  ('click-8.3.1.dist-info\\WHEEL',
+  ('click-8.3.1.dist-info\\licenses\\LICENSE.txt',
    'C:\\Users\\jorge\\Documents\\SISTEMA '
-   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\click-8.3.1.dist-info\\WHEEL',
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\click-8.3.1.dist-info\\licenses\\LICENSE.txt',
    'DATA'),
-  ('click-8.3.1.dist-info\\INSTALLER',
+  ('websockets-16.0.dist-info\\licenses\\LICENSE',
    'C:\\Users\\jorge\\Documents\\SISTEMA '
-   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\click-8.3.1.dist-info\\INSTALLER',
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\websockets-16.0.dist-info\\licenses\\LICENSE',
+   'DATA'),
+  ('pydantic-2.12.5.dist-info\\RECORD',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\pydantic-2.12.5.dist-info\\RECORD',
+   'DATA'),
+  ('pydantic-2.12.5.dist-info\\REQUESTED',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\pydantic-2.12.5.dist-info\\REQUESTED',
+   'DATA'),
+  ('websockets-16.0.dist-info\\RECORD',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\websockets-16.0.dist-info\\RECORD',
    'DATA'),
   ('click-8.3.1.dist-info\\METADATA',
    'C:\\Users\\jorge\\Documents\\SISTEMA '
    'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\click-8.3.1.dist-info\\METADATA',
    'DATA'),
-  ('pydantic-2.12.5.dist-info\\WHEEL',
-   'C:\\Users\\jorge\\Documents\\SISTEMA '
-   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\pydantic-2.12.5.dist-info\\WHEEL',
-   'DATA'),
   ('pydantic-2.12.5.dist-info\\licenses\\LICENSE',
    'C:\\Users\\jorge\\Documents\\SISTEMA '
    'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\pydantic-2.12.5.dist-info\\licenses\\LICENSE',
+   'DATA'),
+  ('websockets-16.0.dist-info\\METADATA',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\websockets-16.0.dist-info\\METADATA',
+   'DATA'),
+  ('websockets-16.0.dist-info\\top_level.txt',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\websockets-16.0.dist-info\\top_level.txt',
+   'DATA'),
+  ('websockets-16.0.dist-info\\entry_points.txt',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\websockets-16.0.dist-info\\entry_points.txt',
+   'DATA'),
+  ('click-8.3.1.dist-info\\INSTALLER',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\click-8.3.1.dist-info\\INSTALLER',
+   'DATA'),
+  ('pydantic-2.12.5.dist-info\\INSTALLER',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\pydantic-2.12.5.dist-info\\INSTALLER',
+   'DATA'),
+  ('websockets-16.0.dist-info\\INSTALLER',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\websockets-16.0.dist-info\\INSTALLER',
+   'DATA'),
+  ('click-8.3.1.dist-info\\WHEEL',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\click-8.3.1.dist-info\\WHEEL',
+   'DATA'),
+  ('websockets-16.0.dist-info\\WHEEL',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\websockets-16.0.dist-info\\WHEEL',
+   'DATA'),
+  ('click-8.3.1.dist-info\\RECORD',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\click-8.3.1.dist-info\\RECORD',
    'DATA'),
   ('base_library.zip',
    'C:\\Users\\jorge\\Documents\\SISTEMA '
    'SMARFILMVAL\\backend\\build\\smartfilm\\base_library.zip',
    'DATA')],
- [('enum',
-   'C:\\Users\\jorge\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\enum.py',
+ [('copyreg',
+   'C:\\Users\\jorge\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\copyreg.py',
    'PYMODULE'),
   ('abc',
    'C:\\Users\\jorge\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\abc.py',
    'PYMODULE'),
-  ('reprlib',
-   'C:\\Users\\jorge\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\reprlib.py',
+  ('sre_compile',
+   'C:\\Users\\jorge\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\sre_compile.py',
    'PYMODULE'),
-  ('codecs',
-   'C:\\Users\\jorge\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\codecs.py',
+  ('traceback',
+   'C:\\Users\\jorge\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\traceback.py',
    'PYMODULE'),
-  ('types',
-   'C:\\Users\\jorge\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\types.py',
+  ('_collections_abc',
+   'C:\\Users\\jorge\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\_collections_abc.py',
    'PYMODULE'),
-  ('stat',
-   'C:\\Users\\jorge\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\stat.py',
+  ('keyword',
+   'C:\\Users\\jorge\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\keyword.py',
+   'PYMODULE'),
+  ('genericpath',
+   'C:\\Users\\jorge\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\genericpath.py',
+   'PYMODULE'),
+  ('linecache',
+   'C:\\Users\\jorge\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\linecache.py',
+   'PYMODULE'),
+  ('_weakrefset',
+   'C:\\Users\\jorge\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\_weakrefset.py',
+   'PYMODULE'),
+  ('ntpath',
+   'C:\\Users\\jorge\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\ntpath.py',
+   'PYMODULE'),
+  ('locale',
+   'C:\\Users\\jorge\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\locale.py',
    'PYMODULE'),
   ('encodings.zlib_codec',
    'C:\\Users\\jorge\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\encodings\\zlib_codec.py',
@@ -4701,38 +5116,32 @@
   ('encodings',
    'C:\\Users\\jorge\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\encodings\\__init__.py',
    'PYMODULE'),
-  ('operator',
-   'C:\\Users\\jorge\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\operator.py',
-   'PYMODULE'),
-  ('sre_constants',
-   'C:\\Users\\jorge\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\sre_constants.py',
-   'PYMODULE'),
-  ('locale',
-   'C:\\Users\\jorge\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\locale.py',
-   'PYMODULE'),
-  ('ntpath',
-   'C:\\Users\\jorge\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\ntpath.py',
-   'PYMODULE'),
-  ('genericpath',
-   'C:\\Users\\jorge\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\genericpath.py',
-   'PYMODULE'),
-  ('heapq',
-   'C:\\Users\\jorge\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\heapq.py',
+  ('io',
+   'C:\\Users\\jorge\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\io.py',
    'PYMODULE'),
   ('functools',
    'C:\\Users\\jorge\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\functools.py',
    'PYMODULE'),
-  ('posixpath',
-   'C:\\Users\\jorge\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\posixpath.py',
-   'PYMODULE'),
-  ('collections',
-   'C:\\Users\\jorge\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\collections\\__init__.py',
+  ('codecs',
+   'C:\\Users\\jorge\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\codecs.py',
    'PYMODULE'),
   ('weakref',
    'C:\\Users\\jorge\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\weakref.py',
    'PYMODULE'),
-  ('keyword',
-   'C:\\Users\\jorge\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\keyword.py',
+  ('operator',
+   'C:\\Users\\jorge\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\operator.py',
+   'PYMODULE'),
+  ('stat',
+   'C:\\Users\\jorge\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\stat.py',
+   'PYMODULE'),
+  ('enum',
+   'C:\\Users\\jorge\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\enum.py',
+   'PYMODULE'),
+  ('sre_constants',
+   'C:\\Users\\jorge\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\sre_constants.py',
+   'PYMODULE'),
+  ('heapq',
+   'C:\\Users\\jorge\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\heapq.py',
    'PYMODULE'),
   ('re._parser',
    'C:\\Users\\jorge\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\re\\_parser.py',
@@ -4749,32 +5158,23 @@
   ('re',
    'C:\\Users\\jorge\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\re\\__init__.py',
    'PYMODULE'),
-  ('_collections_abc',
-   'C:\\Users\\jorge\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\_collections_abc.py',
+  ('posixpath',
+   'C:\\Users\\jorge\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\posixpath.py',
    'PYMODULE'),
-  ('sre_compile',
-   'C:\\Users\\jorge\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\sre_compile.py',
-   'PYMODULE'),
-  ('_weakrefset',
-   'C:\\Users\\jorge\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\_weakrefset.py',
-   'PYMODULE'),
-  ('traceback',
-   'C:\\Users\\jorge\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\traceback.py',
-   'PYMODULE'),
-  ('linecache',
-   'C:\\Users\\jorge\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\linecache.py',
-   'PYMODULE'),
-  ('copyreg',
-   'C:\\Users\\jorge\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\copyreg.py',
+  ('collections',
+   'C:\\Users\\jorge\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\collections\\__init__.py',
    'PYMODULE'),
   ('warnings',
    'C:\\Users\\jorge\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\warnings.py',
    'PYMODULE'),
+  ('reprlib',
+   'C:\\Users\\jorge\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\reprlib.py',
+   'PYMODULE'),
+  ('types',
+   'C:\\Users\\jorge\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\types.py',
+   'PYMODULE'),
   ('sre_parse',
    'C:\\Users\\jorge\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\sre_parse.py',
-   'PYMODULE'),
-  ('io',
-   'C:\\Users\\jorge\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\io.py',
    'PYMODULE'),
   ('os',
    'C:\\Users\\jorge\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\os.py',

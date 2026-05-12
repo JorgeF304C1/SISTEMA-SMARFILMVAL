@@ -101,6 +101,14 @@
    'C:\\Users\\jorge\\Documents\\SISTEMA '
    'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\greenlet\\_greenlet.cp313-win_amd64.pyd',
    'EXTENSION'),
+  ('httptools\\parser\\parser.cp313-win_amd64.pyd',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\httptools\\parser\\parser.cp313-win_amd64.pyd',
+   'EXTENSION'),
+  ('httptools\\parser\\url_parser.cp313-win_amd64.pyd',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\httptools\\parser\\url_parser.cp313-win_amd64.pyd',
+   'EXTENSION'),
   ('libcrypto-3.dll',
    'C:\\Users\\jorge\\AppData\\Local\\Programs\\Python\\Python313\\DLLs\\libcrypto-3.dll',
    'BINARY'),
@@ -210,17 +218,17 @@
   ('sqlite3.dll',
    'C:\\Users\\jorge\\AppData\\Local\\Programs\\Python\\Python313\\DLLs\\sqlite3.dll',
    'BINARY'),
-  ('static_frontend\\assets\\html2pdf-NgSKRkVC.js',
+  ('static_frontend\\assets\\html2pdf-Cuu9kNIz.js',
    'C:\\Users\\jorge\\Documents\\SISTEMA '
-   'SMARFILMVAL\\backend\\static_frontend\\assets\\html2pdf-NgSKRkVC.js',
+   'SMARFILMVAL\\backend\\static_frontend\\assets\\html2pdf-Cuu9kNIz.js',
    'DATA'),
   ('static_frontend\\assets\\index-BLx8oa7L.css',
    'C:\\Users\\jorge\\Documents\\SISTEMA '
    'SMARFILMVAL\\backend\\static_frontend\\assets\\index-BLx8oa7L.css',
    'DATA'),
-  ('static_frontend\\assets\\index-CNjZqgXD.js',
+  ('static_frontend\\assets\\index-D015Thiq.js',
    'C:\\Users\\jorge\\Documents\\SISTEMA '
-   'SMARFILMVAL\\backend\\static_frontend\\assets\\index-CNjZqgXD.js',
+   'SMARFILMVAL\\backend\\static_frontend\\assets\\index-D015Thiq.js',
    'DATA'),
   ('static_frontend\\favicon.svg',
    'C:\\Users\\jorge\\Documents\\SISTEMA '
@@ -240,6 +248,42 @@
    'DATA'),
   ('unicodedata.pyd',
    'C:\\Users\\jorge\\AppData\\Local\\Programs\\Python\\Python313\\DLLs\\unicodedata.pyd',
+   'EXTENSION'),
+  ('watchfiles\\_rust_notify.cp313-win_amd64.pyd',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\watchfiles\\_rust_notify.cp313-win_amd64.pyd',
+   'EXTENSION'),
+  ('websockets-16.0.dist-info\\INSTALLER',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\websockets-16.0.dist-info\\INSTALLER',
+   'DATA'),
+  ('websockets-16.0.dist-info\\METADATA',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\websockets-16.0.dist-info\\METADATA',
+   'DATA'),
+  ('websockets-16.0.dist-info\\RECORD',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\websockets-16.0.dist-info\\RECORD',
+   'DATA'),
+  ('websockets-16.0.dist-info\\WHEEL',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\websockets-16.0.dist-info\\WHEEL',
+   'DATA'),
+  ('websockets-16.0.dist-info\\entry_points.txt',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\websockets-16.0.dist-info\\entry_points.txt',
+   'DATA'),
+  ('websockets-16.0.dist-info\\licenses\\LICENSE',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\websockets-16.0.dist-info\\licenses\\LICENSE',
+   'DATA'),
+  ('websockets-16.0.dist-info\\top_level.txt',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\websockets-16.0.dist-info\\top_level.txt',
+   'DATA'),
+  ('websockets\\speedups.cp313-win_amd64.pyd',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\websockets\\speedups.cp313-win_amd64.pyd',
    'EXTENSION'),
   ('webview\\js\\api.js',
    'C:\\Users\\jorge\\Documents\\SISTEMA '
@@ -296,4 +340,8 @@
   ('webview\\lib\\runtimes\\win-x86\\native\\WebView2Loader.dll',
    'C:\\Users\\jorge\\Documents\\SISTEMA '
    'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\webview\\lib\\runtimes\\win-x86\\native\\WebView2Loader.dll',
-   'BINARY')],)
+   'BINARY'),
+  ('yaml\\_yaml.cp313-win_amd64.pyd',
+   'C:\\Users\\jorge\\Documents\\SISTEMA '
+   'SMARFILMVAL\\backend\\venv\\Lib\\site-packages\\yaml\\_yaml.cp313-win_amd64.pyd',
+   'EXTENSION')],)

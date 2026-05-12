@@ -37,13 +37,13 @@ class ProjectStatusUpdate(BaseModel):
     completed_date: Optional[str] = None
 
 class ProjectPriceUpdate(BaseModel):
-    price_per_sqm: float
+    price_per_ml: float
 
 class ProjectRollWidthUpdate(BaseModel):
     roll_width: float
 
 class ProjectBaseCostUpdate(BaseModel):
-    base_cost_per_sqm: float
+    base_cost_per_ml: float
 
 class ProjectLaborCostUpdate(BaseModel):
     labor_cost_per_sqm: float
@@ -119,8 +119,8 @@ def get_dashboard(db: Session = Depends(get_db)):
     
     for p in projects:
         true_linear_meters, _, total_installed_area, total_material_area, _, _ = calculate_consumption(p.areas, p.roll_width)
-        income = total_installed_area * p.price_per_sqm
-        material_cost = total_material_area * p.base_cost_per_sqm
+        income = true_linear_meters * p.price_per_ml
+        material_cost = true_linear_meters * p.base_cost_per_ml
         labor_cost = total_installed_area * p.labor_cost_per_sqm
         
         if p.status == "Completado":
@@ -168,9 +168,9 @@ def create_project(project: ProjectCreate, db: Session = Depends(get_db)):
         client_phone_direct=project.client_phone,
         client_email_direct=project.client_email,
         client_address_direct=project.client_address,
-        price_per_sqm=settings.default_price_per_sqm,
+        price_per_ml=settings.default_price_per_ml,
         roll_width=settings.default_roll_width,
-        base_cost_per_sqm=settings.default_base_cost_per_sqm,
+        base_cost_per_ml=settings.default_base_cost_per_ml,
         labor_cost_per_sqm=settings.default_labor_cost_per_sqm,
         installation_date=project.installation_date
     )
@@ -221,7 +221,7 @@ def update_project_price(project_id: int, price_update: ProjectPriceUpdate, db: 
     project = db.query(models.Project).filter(models.Project.id == project_id).first()
     if not project:
         raise HTTPException(status_code=404, detail="Project not found")
-    project.price_per_sqm = price_update.price_per_sqm
+    project.price_per_ml = price_update.price_per_ml
     db.commit()
     db.refresh(project)
     return project
@@ -251,7 +251,7 @@ def update_project_base_cost(project_id: int, cost_update: ProjectBaseCostUpdate
     project = db.query(models.Project).filter(models.Project.id == project_id).first()
     if not project:
         raise HTTPException(status_code=404, detail="Project not found")
-    project.base_cost_per_sqm = cost_update.base_cost_per_sqm
+    project.base_cost_per_ml = cost_update.base_cost_per_ml
     db.commit()
     db.refresh(project)
     return project
@@ -282,10 +282,9 @@ def get_project_detail(project_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Project not found")
     # Calculate detailed metrics with explicit bin packing
     true_linear_meters, rows, total_installed_area, total_material_area, waste_m2, efficiency = calculate_consumption(project.areas, project.roll_width)
-    total_income = total_installed_area * project.price_per_sqm
-    
-    # Calculate base material cost dynamically using total consumed area
-    material_cost = total_material_area * project.base_cost_per_sqm
+    total_income = true_linear_meters * project.price_per_ml
+
+    material_cost = true_linear_meters * project.base_cost_per_ml
     labor_cost = total_installed_area * project.labor_cost_per_sqm
     
     total_expenses = sum(e.amount for e in project.expenses if not e.is_nullified)
@@ -300,11 +299,12 @@ def get_project_detail(project_id: int, db: Session = Depends(get_db)):
             "address": project.client_address_direct or "",
             "ci_rif": project.client_ci_rif_direct or "",
             "status": project.status,
-            "price_per_sqm": project.price_per_sqm,
+            "price_per_ml": project.price_per_ml,
             "roll_width": project.roll_width,
             "module_cost": project.module_cost,
-            "base_cost_per_sqm": project.base_cost_per_sqm,
+            "base_cost_per_ml": project.base_cost_per_ml,
             "labor_cost_per_sqm": project.labor_cost_per_sqm,
+            "pricing_mode": project.pricing_mode,
             "installation_date": project.installation_date,
             "created_at": project.created_at
         },
