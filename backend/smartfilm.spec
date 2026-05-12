@@ -17,6 +17,8 @@ block_cipher = None
 datas = [
     # Compiled React frontend (run `npm run build` first)
     ('static_frontend', 'static_frontend'),
+    # pywebview runtimes — all three platforms needed at module load time
+    (r'venv\Lib\site-packages\webview\lib', r'webview\lib'),
 ]
 
 # ── Hidden imports (modules PyInstaller misses via static analysis) ─────────────

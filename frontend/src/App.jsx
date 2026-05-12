@@ -21,7 +21,7 @@ function App() {
   
   // Quick Quote state
   const [quoteModalOpen, setQuoteModalOpen] = useState(false);
-  const [quoteParams, setQuoteParams] = useState({ width: '', height: '', basePrice: 200 });
+  const [quoteParams, setQuoteParams] = useState({ width: '', height: '', basePrice: 200, rollWidth: 1.5 });
   const [basePriceLoading, setBasePriceLoading] = useState(false);
   const [pdfGenerating, setPdfGenerating] = useState(false);
   const [pdfFeedback, setPdfFeedback] = useState(null); // { type: 'success'|'error', msg }
@@ -47,7 +47,7 @@ function App() {
     setBasePriceLoading(true);
     try {
       const res = await axios.get("/api/v1/settings");
-      setQuoteParams(prev => ({...prev, basePrice: res.data.default_price_per_sqm}));
+      setQuoteParams(prev => ({...prev, basePrice: res.data.default_price_per_ml, rollWidth: res.data.default_roll_width}));
     } catch (err) {
       console.error("No se pudo cargar precio base");
     } finally {
@@ -56,37 +56,41 @@ function App() {
   };
 
   const handleDownloadQuote = async () => {
-    const area = parseFloat(quoteParams.width || 0) * parseFloat(quoteParams.height || 0);
-    const total = area * quoteParams.basePrice;
-    
+    const width = parseFloat(quoteParams.width || 0);
+    const height = parseFloat(quoteParams.height || 0);
+    const rollWidth = quoteParams.rollWidth || 1.5;
+    const linearMeters = rollWidth > 0 ? height * Math.ceil(width / rollWidth) : 0;
+    const total = linearMeters * quoteParams.basePrice;
+
     const element = document.createElement('div');
     element.innerHTML = `
       <div style="font-family: Arial, sans-serif; padding: 40px; color: #333; background: white;">
+        <img src="/logo.png" style="max-height: 60px; margin-bottom: 10px;" crossorigin="anonymous" />
         <h1 style="color: #0070f3; margin-bottom: 5px;">Smart Film Valencia</h1>
         <p style="color: #666; margin-top: 0; font-size: 14px;">Cotización Express - Sin compromiso</p>
         <hr style="border: 1px solid #eee; margin: 30px 0;" />
-        
+
         <table style="width: 100%; border-collapse: collapse; margin-bottom: 30px;">
           <tr style="background: #f4f4f4;">
             <th style="padding: 12px; border: 1px solid #ddd; text-align: left;">Descripción</th>
-            <th style="padding: 12px; border: 1px solid #ddd; text-align: center;">Área</th>
+            <th style="padding: 12px; border: 1px solid #ddd; text-align: center;">Metros Lineales</th>
             <th style="padding: 12px; border: 1px solid #ddd; text-align: right;">Total Estimado</th>
           </tr>
           <tr>
             <td style="padding: 12px; border: 1px solid #ddd;">
               Suministro e instalación de Vinilo Inteligente Smart Film.<br/>
-              <span style="font-size: 12px; color: #666;">Precio Base aplicado: $${quoteParams.basePrice.toFixed(2)}/m²</span>
+              <span style="font-size: 12px; color: #666;">Precio por metro lineal: $${quoteParams.basePrice.toFixed(2)}/ml | Bobina: ${rollWidth}m de ancho</span>
             </td>
             <td style="padding: 12px; border: 1px solid #ddd; text-align: center;">
-              <strong>${area.toFixed(2)} m²</strong><br/>
-              <span style="font-size: 11px;">(${quoteParams.width}m x ${quoteParams.height}m)</span>
+              <strong>${linearMeters.toFixed(2)} ml</strong><br/>
+              <span style="font-size: 11px;">(${width}m x ${height}m)</span>
             </td>
             <td style="padding: 12px; border: 1px solid #ddd; text-align: right; font-size: 18px;">
               <strong>$${total.toFixed(2)}</strong>
             </td>
           </tr>
         </table>
-        
+
         <div style="margin-top: 50px; text-align: center; font-size: 12px; color: #999;">
           <p>Validez de la cotización: 15 días.</p>
           <p>Esta es una estimación rápida, el precio final podría variar tras la visita técnica.</p>
@@ -197,7 +201,7 @@ function App() {
           <div className="glass-card animate-fade-in" style={{ padding: '32px', width: '400px' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
               <h2 style={{ display: 'flex', alignItems: 'center', gap: '8px' }}><Calculator size={24} color="var(--accent-cyan)" /> Cotizador Express</h2>
-              <button onClick={() => { setQuoteModalOpen(false); setQuoteParams({width:'', height:'', basePrice: quoteParams.basePrice})}} style={{ background: 'transparent', border: 'none', color: 'white', cursor: 'pointer' }}><X size={20} /></button>
+              <button onClick={() => { setQuoteModalOpen(false); setQuoteParams({width:'', height:'', basePrice: quoteParams.basePrice, rollWidth: quoteParams.rollWidth})}} style={{ background: 'transparent', border: 'none', color: 'white', cursor: 'pointer' }}><X size={20} /></button>
             </div>
             
             <p style={{ color: 'var(--text-muted)', fontSize: '13px', marginBottom: '20px' }}>Cotiza rápidamente sin registrar nada en la base de datos.</p>
@@ -214,17 +218,24 @@ function App() {
             </div>
             
             <div style={{ marginBottom: '24px' }}>
-               <label style={{ display: 'block', marginBottom: '8px', fontSize: '13px', color: 'var(--text-muted)' }}>Precio Base ($/m²)</label>
+               <label style={{ display: 'block', marginBottom: '8px', fontSize: '13px', color: 'var(--text-muted)' }}>Precio Base ($/ml)</label>
                <input type="number" step="0.1" value={quoteParams.basePrice} onChange={e => setQuoteParams({...quoteParams, basePrice: parseFloat(e.target.value)})} disabled={basePriceLoading} style={{ width: '100%', padding: '10px', borderRadius: '6px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: 'white' }} />
             </div>
-            
-            <div style={{ background: 'rgba(16, 185, 129, 0.1)', border: '1px solid var(--success-green)', padding: '20px', borderRadius: '8px', textAlign: 'center' }}>
-              <h4 style={{ color: 'var(--success-green)', marginBottom: '4px', fontSize: '14px' }}>Costo Estimado</h4>
-              <h1 style={{ fontSize: '36px', color: 'white', marginBottom: '8px' }}>
-                ${ (parseFloat(quoteParams.width || 0) * parseFloat(quoteParams.height || 0) * quoteParams.basePrice).toFixed(2) }
-              </h1>
-              <p style={{ color: 'var(--text-muted)', fontSize: '12px', marginTop: '4px' }}>Total Área: {(parseFloat(quoteParams.width || 0) * parseFloat(quoteParams.height || 0)).toFixed(2)} m²</p>
-            </div>
+
+            {(() => {
+              const w = parseFloat(quoteParams.width || 0);
+              const h = parseFloat(quoteParams.height || 0);
+              const rw = quoteParams.rollWidth || 1.5;
+              const ml = rw > 0 ? h * Math.ceil(w / rw) : 0;
+              const total = ml * quoteParams.basePrice;
+              return (
+                <div style={{ background: 'rgba(16, 185, 129, 0.1)', border: '1px solid var(--success-green)', padding: '20px', borderRadius: '8px', textAlign: 'center' }}>
+                  <h4 style={{ color: 'var(--success-green)', marginBottom: '4px', fontSize: '14px' }}>Costo Estimado</h4>
+                  <h1 style={{ fontSize: '36px', color: 'white', marginBottom: '8px' }}>${total.toFixed(2)}</h1>
+                  <p style={{ color: 'var(--text-muted)', fontSize: '12px', marginTop: '4px' }}>Metros Lineales: {ml.toFixed(2)} ml · Bobina: {rw}m</p>
+                </div>
+              );
+            })()}
             
             {pdfFeedback && (
               <div style={{

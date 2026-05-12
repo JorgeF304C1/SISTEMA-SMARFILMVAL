@@ -82,9 +82,9 @@ from sqlalchemy.orm import Session
 from app.db.database import get_db
 
 class SettingsUpdate(BaseModel):
-    default_price_per_sqm: float
+    default_price_per_ml: float
     default_roll_width: float
-    default_base_cost_per_sqm: float
+    default_base_cost_per_ml: float
     default_labor_cost_per_sqm: float
     delivery_note_warranty_months: int
 
@@ -104,9 +104,9 @@ def update_settings(settings_update: SettingsUpdate, db: Session = Depends(get_d
     if not settings:
         settings = models.SystemSettings()
         db.add(settings)
-    settings.default_price_per_sqm = settings_update.default_price_per_sqm
+    settings.default_price_per_ml = settings_update.default_price_per_ml
     settings.default_roll_width = settings_update.default_roll_width
-    settings.default_base_cost_per_sqm = settings_update.default_base_cost_per_sqm
+    settings.default_base_cost_per_ml = settings_update.default_base_cost_per_ml
     settings.default_labor_cost_per_sqm = settings_update.default_labor_cost_per_sqm
     settings.delivery_note_warranty_months = settings_update.delivery_note_warranty_months
     db.commit()
