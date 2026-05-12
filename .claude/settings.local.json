@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python migrate_ml.py)",
+      "Bash(./venv/Scripts/python.exe migrate_ml.py)",
+      "Bash(npm run *)",
+      "Bash(./venv/Scripts/pyinstaller.exe smartfilm.spec --noconfirm)",
+      "Bash(cp \"/c/Users/jorge/Documents/SISTEMA SMARFILMVAL/.claude/worktrees/gallant-booth-7bbb41/backend/migrate_labor_to_sqm.py\" \"/c/Users/jorge/Documents/SISTEMA SMARFILMVAL/backend/migrate_labor_to_sqm.py\")",
+      "Bash(./venv/Scripts/python.exe migrate_labor_to_sqm.py)",
+      "Bash(cp '/c/Users/jorge/Documents/SISTEMA SMARFILMVAL/.claude/worktrees/gallant-booth-7bbb41/frontend/src/App.jsx' '/c/Users/jorge/Documents/SISTEMA SMARFILMVAL/frontend/src/App.jsx')",
+      "Bash(cp '/c/Users/jorge/Documents/SISTEMA SMARFILMVAL/.claude/worktrees/gallant-booth-7bbb41/frontend/src/pages/ProjectDetail.jsx' '/c/Users/jorge/Documents/SISTEMA SMARFILMVAL/frontend/src/pages/ProjectDetail.jsx')",
+      "Bash(cp '/c/Users/jorge/Documents/SISTEMA SMARFILMVAL/.claude/worktrees/gallant-booth-7bbb41/frontend/src/pages/Settings.jsx' '/c/Users/jorge/Documents/SISTEMA SMARFILMVAL/frontend/src/pages/Settings.jsx')",
+      "Bash(tasklist)",
+      "Bash(taskkill //F //IM SmartFilm_Valencia.exe)"
+    ]
+  }
+}

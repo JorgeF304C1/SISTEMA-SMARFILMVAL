@@ -44,7 +44,7 @@ export default function ProjectDetail() {
     try {
       const res = await axios.get(`${API_URL}/projects/${id}`);
       setProject(res.data.project);
-      setTempPrice(res.data.project.price_per_sqm.toString());
+      setTempPrice(res.data.project.price_per_ml.toString());
       setTempRollWidth(res.data.project.roll_width.toString());
       setTempBaseCost(res.data.project.base_cost_per_sqm.toString());
       setTempLaborCost(res.data.project.labor_cost_per_sqm.toString());
@@ -55,7 +55,7 @@ export default function ProjectDetail() {
       setConsumptionBreakdown(res.data.consumption_breakdown || []);
       setMetrics(res.data.metrics);
     } catch {
-      setProject({ id, name: "Proyecto Demo", client_name: "Cliente X", status: "Cotizado", price_per_sqm: 200, roll_width: 1.5 });
+      setProject({ id, name: "Proyecto Demo", client_name: "Cliente X", status: "Cotizado", price_per_ml: 200, roll_width: 1.5 });
       setMetrics({ total_area_sqm: 10, total_material_sqm: 15, waste_m2: 5, efficiency_percentage: 66, linear_meters: 10, net_profit: 1500, total_expenses: 500, total_income: 2000 });
       setConsumptionBreakdown([]);
     }
@@ -159,7 +159,7 @@ export default function ProjectDetail() {
 
   const handleUpdatePrice = async () => {
     try {
-      await axios.put(`${API_URL}/projects/${id}/price`, { price_per_sqm: parseFloat(tempPrice) });
+      await axios.put(`${API_URL}/projects/${id}/price`, { price_per_ml: parseFloat(tempPrice) });
       setIsEditingPrice(false);
       loadData();
     } catch (err) { console.error("Error updating price", err); }
@@ -225,6 +225,7 @@ export default function ProjectDetail() {
     element.innerHTML = `
       <div style="font-family: Arial, sans-serif; padding: 40px; color: #333; background: white;">
         <div style="text-align: center; border-bottom: 2px solid #0070f3; padding-bottom: 20px; margin-bottom: 30px;">
+          <img src="/logo.png" style="max-height: 60px; margin-bottom: 10px;" crossorigin="anonymous" />
           <p style="margin:0; color:#777;">Innovación en Vidrios Inteligentes</p>
         </div>
         <div style="display: flex; justify-content: space-between; margin-bottom: 30px;">
@@ -246,7 +247,7 @@ export default function ProjectDetail() {
             <th style="padding: 10px; border: 1px solid #ddd; text-align: right;">Total</th>
           </tr>
           <tr>
-            <td style="padding: 10px; border: 1px solid #ddd;">Instalación SmartFilm (${metrics.total_area_sqm} m² x Precio $${project.price_per_sqm})</td>
+            <td style="padding: 10px; border: 1px solid #ddd;">Instalación SmartFilm (${metrics.linear_meters} ml x Precio $${project.price_per_ml})</td>
             <td style="padding: 10px; border: 1px solid #ddd; text-align: right; font-size: 18px;"><strong>$${metrics.total_income}</strong></td>
           </tr>
         </table>
@@ -278,6 +279,7 @@ export default function ProjectDetail() {
     element.innerHTML = `
       <div style="font-family: Arial, sans-serif; padding: 40px; color: #333; background: white;">
         <div style="text-align: center; border-bottom: 2px solid #0070f3; padding-bottom: 20px; margin-bottom: 30px;">
+          <img src="/logo.png" style="max-height: 60px; margin-bottom: 10px;" crossorigin="anonymous" />
           <p style="margin:0; color:#777;">Innovación en Vidrios Inteligentes</p>
         </div>
         <div style="display: flex; justify-content: space-between; margin-bottom: 30px;">
@@ -298,7 +300,7 @@ export default function ProjectDetail() {
             <th style="padding: 10px; border: 1px solid #ddd; text-align: right;">Total</th>
           </tr>
           <tr>
-            <td style="padding: 10px; border: 1px solid #ddd;">Instalación SmartFilm (${metrics.total_area_sqm} m² instalados x $${project.price_per_sqm})</td>
+            <td style="padding: 10px; border: 1px solid #ddd;">Instalación SmartFilm (${metrics.linear_meters} ml x $${project.price_per_ml})</td>
             <td style="padding: 10px; border: 1px solid #ddd; text-align: right; font-size: 18px;"><strong>$${metrics.total_income}</strong></td>
           </tr>
         </table>
@@ -380,7 +382,7 @@ export default function ProjectDetail() {
             <h3 style={{ marginBottom: '16px', color: 'var(--primary-blue)' }}>Resumen Financiero</h3>
             <p style={{ marginBottom: '8px' }}>Área Total: <strong>{metrics.total_area_sqm} m²</strong></p>
             <div style={{ marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <span>Precio m²:</span>
+              <span>Precio por metro lineal:</span>
               {isEditingPrice ? (
                 <>
                   <input 
@@ -390,11 +392,11 @@ export default function ProjectDetail() {
                     style={{ background: 'transparent', color: 'white', border: '1px solid rgba(255,255,255,0.2)', borderRadius: '4px', padding: '4px 8px', width: '80px', outline: 'none' }}
                   />
                   <button onClick={handleUpdatePrice} style={{ background: 'var(--success-green)', color: 'white', border: 'none', borderRadius: '4px', padding: '4px 8px', cursor: 'pointer', fontSize: '12px' }}>Guardar</button>
-                  <button onClick={() => { setIsEditingPrice(false); setTempPrice(project.price_per_sqm.toString()); }} style={{ background: 'transparent', color: '#fca5a5', border: '1px solid #fca5a5', borderRadius: '4px', padding: '4px 8px', cursor: 'pointer', fontSize: '12px' }}>X</button>
+                  <button onClick={() => { setIsEditingPrice(false); setTempPrice(project.price_per_ml.toString()); }} style={{ background: 'transparent', color: '#fca5a5', border: '1px solid #fca5a5', borderRadius: '4px', padding: '4px 8px', cursor: 'pointer', fontSize: '12px' }}>X</button>
                 </>
               ) : (
                 <>
-                  <strong>${project.price_per_sqm}</strong>
+                  <strong>${project.price_per_ml}</strong>
                   <button onClick={() => setIsEditingPrice(true)} style={{ background: 'transparent', border: 'none', color: 'var(--accent-cyan)', cursor: 'pointer', fontSize: '12px', textDecoration: 'underline' }}>Editar</button>
                 </>
               )}
@@ -420,19 +422,7 @@ export default function ProjectDetail() {
               )}
             </div>
             
-            <div style={{ display: 'grid', gridTemplateColumns: 'revert', gap: '8px', marginBottom: '16px' }}>
-              <p>Metros Lineales (Real): <strong style={{color: 'var(--accent-cyan)'}}>{metrics.linear_meters} ml</strong></p>
-              <p>Área Base Generada: <strong>{metrics.total_material_sqm} m²</strong></p>
-              <p>Desperdicio Real: <strong style={{color: '#ff7b7b'}}>{metrics.waste_m2} m²</strong></p>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <p>Aprovechamiento: <strong style={{color: metrics.efficiency_percentage > 85 ? 'var(--success-green)' : (metrics.efficiency_percentage > 70 ? 'orange' : '#ff7b7b')}}>{metrics.efficiency_percentage}%</strong></p>
-                {metrics.efficiency_percentage < 70 && (
-                  <span title="Bajo aprovechamiento de material. El desperdicio está afectando la rentabilidad neta." style={{ cursor: 'help', color: '#ff7b7b', display: 'flex', alignItems: 'center' }}>
-                    <span style={{ fontSize: '16px', fontWeight: 'bold' }}>⚠️</span>
-                  </span>
-                )}
-              </div>
-            </div>
+            <p style={{ marginBottom: '16px' }}>Metros Lineales (Real): <strong style={{color: 'var(--accent-cyan)'}}>{metrics.linear_meters} ml</strong></p>
             
             <hr style={{ border: 'none', borderTop: '1px solid rgba(255,255,255,0.1)', margin: '16px 0' }} />
             <h4 style={{ marginBottom: '12px', color: 'var(--text-muted)' }}>Desglose Contable</h4>

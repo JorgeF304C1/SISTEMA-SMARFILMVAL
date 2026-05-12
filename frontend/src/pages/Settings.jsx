@@ -6,10 +6,10 @@ const API_URL = "/api/v1";
 
 export default function Settings() {
   const [settings, setSettings] = useState({
-    default_price_per_sqm: 200,
+    default_price_per_ml: 200,
     default_roll_width: 1.5,
     default_base_cost_per_sqm: 70.0,
-    default_labor_cost_per_sqm: 10.0,
+    default_labor_cost_per_sqm: 15.0,
     delivery_note_warranty_months: 3
   });
   const [expenses, setExpenses] = useState([]);
@@ -100,14 +100,14 @@ export default function Settings() {
         <form onSubmit={handleSave} className="glass-card">
           <h2 style={{ marginBottom: '24px', fontSize: '20px' }}>Ajustes del Software</h2>
         <div style={{ marginBottom: '24px' }}>
-          <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold' }}>Precio Base Predeterminado ($/m²)</label>
-          <p style={{ fontSize: '12px', color: 'var(--text-muted)', marginBottom: '8px' }}>Este será el precio inicial que tendrán todos los proyectos nuevos que crees.</p>
-          <input 
-            type="number" 
-            step="0.01" 
-            required 
-            value={settings.default_price_per_sqm} 
-            onChange={e => setSettings({...settings, default_price_per_sqm: parseFloat(e.target.value)})} 
+          <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold' }}>Precio Base Predeterminado ($/ml)</label>
+          <p style={{ fontSize: '12px', color: 'var(--text-muted)', marginBottom: '8px' }}>Precio por metro lineal que tendrán todos los proyectos nuevos.</p>
+          <input
+            type="number"
+            step="0.01"
+            required
+            value={settings.default_price_per_ml}
+            onChange={e => setSettings({...settings, default_price_per_ml: parseFloat(e.target.value)})}
             style={{ width: '100%', padding: '12px', borderRadius: '8px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: 'white' }}
           />
         </div>
@@ -139,14 +139,14 @@ export default function Settings() {
         </div>
 
         <div style={{ marginBottom: '24px' }}>
-          <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold' }}>Costo de Personal Estándar ($/m²)</label>
-          <p style={{ fontSize: '12px', color: 'var(--text-muted)', marginBottom: '8px' }}>El costo predeterminado de mano de obra por cada 1 m² instalado.</p>
-          <input 
-            type="number" 
-            step="0.01" 
-            required 
-            value={settings.default_labor_cost_per_sqm} 
-            onChange={e => setSettings({...settings, default_labor_cost_per_sqm: parseFloat(e.target.value)})} 
+          <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold' }}>Costo de Personal ($/m²)</label>
+          <p style={{ fontSize: '12px', color: 'var(--text-muted)', marginBottom: '8px' }}>Costo predeterminado de mano de obra por metro cuadrado instalado.</p>
+          <input
+            type="number"
+            step="0.01"
+            required
+            value={settings.default_labor_cost_per_sqm}
+            onChange={e => setSettings({...settings, default_labor_cost_per_sqm: parseFloat(e.target.value)})}
             style={{ width: '100%', padding: '12px', borderRadius: '8px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: 'white' }}
           />
         </div>

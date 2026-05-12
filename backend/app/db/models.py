@@ -6,10 +6,10 @@ from .database import Base
 class SystemSettings(Base):
     __tablename__ = "system_settings"
     id = Column(Integer, primary_key=True, index=True)
-    default_price_per_sqm = Column(Float, default=200.0)
+    default_price_per_ml = Column(Float, default=200.0)
     default_roll_width = Column(Float, default=1.5)
     default_base_cost_per_sqm = Column(Float, default=70.0)
-    default_labor_cost_per_sqm = Column(Float, default=10.0)
+    default_labor_cost_per_sqm = Column(Float, default=15.0)
     delivery_note_warranty_months = Column(Integer, default=3)
 
 class User(Base):
@@ -53,11 +53,12 @@ class Project(Base):
     status = Column(String, default="Prospecto")
     
     # Financial & Meds
-    price_per_sqm = Column(Float, default=200.0)
+    price_per_ml = Column(Float, default=200.0)
     roll_width = Column(Float, default=1.5)
     module_cost = Column(Float, default=0.0)
     base_cost_per_sqm = Column(Float, default=70.0)
-    labor_cost_per_sqm = Column(Float, default=10.0)
+    labor_cost_per_sqm = Column(Float, default=15.0)
+    pricing_mode = Column(String, default="ml")
     installation_date = Column(String, nullable=True) # YYYY-MM-DD
     approved_date = Column(String, nullable=True) # YYYY-MM-DD
     completed_date = Column(String, nullable=True) # YYYY-MM-DD
