@@ -8,6 +8,7 @@ const API_URL = "/api/v1";
 export default function Dashboard() {
   const [projects, setProjects] = useState([]);
   const [metrics, setMetrics] = useState({ active: 0, m2: 0, revenue: 0 });
+  const isAdmin = JSON.parse(localStorage.getItem('user') || '{}').role === 'Admin';
 
   const fetchDashboardData = async () => {
     try {
@@ -67,15 +68,17 @@ export default function Dashboard() {
           </div>
         </div>
 
-        <div className="glass-card" style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
-          <div style={{ background: 'rgba(16, 185, 129, 0.2)', padding: '16px', borderRadius: '12px', color: 'var(--success-green)' }}>
-            <TrendingUp size={28} />
+        {isAdmin && (
+          <div className="glass-card" style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+            <div style={{ background: 'rgba(16, 185, 129, 0.2)', padding: '16px', borderRadius: '12px', color: 'var(--success-green)' }}>
+              <TrendingUp size={28} />
+            </div>
+            <div>
+              <p style={{ color: 'var(--text-muted)', fontSize: '14px', marginBottom: '4px' }}>Ingresos Brutos</p>
+              <h2 style={{ fontSize: '28px' }}>${metrics.revenue.toLocaleString()}</h2>
+            </div>
           </div>
-          <div>
-            <p style={{ color: 'var(--text-muted)', fontSize: '14px', marginBottom: '4px' }}>Ingresos Brutos</p>
-            <h2 style={{ fontSize: '28px' }}>${metrics.revenue.toLocaleString()}</h2>
-          </div>
-        </div>
+        )}
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: 'minmax(300px, 400px)', gap: '24px', justifyContent: 'center' }}>

@@ -129,11 +129,12 @@ export default function UsersPage() {
               <div style={{ marginBottom: '32px' }}>
                 <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', color: 'var(--text-muted)' }}>Rol / Permisos</label>
                 <select value={formData.role} onChange={e => setFormData({...formData, role: e.target.value})} style={{ width: '100%', padding: '12px', borderRadius: '8px', background: 'rgba(0,0,0,0.5)', border: '1px solid rgba(255,255,255,0.1)', color: 'white', appearance: 'none' }}>
+                  <option value="Vendedor">Vendedor</option>
                   <option value="Asistente">Asistente / Ventas</option>
                   <option value="Admin">Administrador Total</option>
                 </select>
                 <p style={{ marginTop: '8px', fontSize: '11px', color: 'var(--text-muted)' }}>
-                  {formData.role === 'Admin' ? 'Tendrá acceso al inventario, gastos, ajustes globales y usuarios.' : 'Solo podrá ver, crear y cotizar proyectos.'}
+                  {formData.role === 'Admin' ? 'Tendrá acceso al inventario, gastos, ajustes globales y usuarios.' : formData.role === 'Vendedor' ? 'Solo ve m², ml, precio y totales. Sin costos, egresos ni ganancia.' : 'Solo podrá ver, crear y cotizar proyectos.'}
                 </p>
               </div>
               

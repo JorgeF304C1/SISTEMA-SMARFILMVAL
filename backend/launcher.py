@@ -11,6 +11,10 @@ import os
 import time
 import threading
 import socket
+import pathlib
+import platform
+import shutil
+from datetime import datetime
 
 # ── Resolve paths ──────────────────────────────────────────────────────────────
 if getattr(sys, 'frozen', False):
@@ -22,8 +26,44 @@ else:
     APP_DIR      = os.path.dirname(os.path.abspath(__file__))
     INTERNAL_DIR = APP_DIR
 
-# La base de datos y local_storage viven JUNTO al .exe (no en _MEIPASS)
 os.chdir(APP_DIR)
+
+
+def resolve_user_db_path():
+    """Devuelve (db_path, data_dir) en una ubicación protegida fuera del bundle."""
+    if platform.system() == 'Darwin':
+        base = pathlib.Path.home() / "Library" / "Application Support" / "SmartFilm_Valencia"
+    elif platform.system() == 'Windows':
+        base = pathlib.Path(os.environ['APPDATA']) / "SmartFilm_Valencia"
+    else:
+        base = pathlib.Path.home() / ".smartfilm_valencia"
+    base.mkdir(parents=True, exist_ok=True)
+    db_path = base / "smartfilm.db"
+    if not db_path.exists():
+        seed = pathlib.Path(INTERNAL_DIR) / "smartfilm_seed.db"
+        if seed.exists():
+            shutil.copy2(seed, db_path)
+    return str(db_path), base
+
+
+def auto_backup(db_path, data_dir, keep=10):
+    """Crea un snapshot del DB al arrancar y rota para conservar solo los `keep` más nuevos."""
+    if not os.path.exists(db_path):
+        return
+    backups = pathlib.Path(data_dir) / "backups"
+    backups.mkdir(exist_ok=True)
+    stamp = datetime.now().strftime("%Y-%m-%d_%H%M%S")
+    shutil.copy2(db_path, backups / f"smartfilm-{stamp}.db")
+    files = sorted(backups.glob("smartfilm-*.db"), key=lambda p: p.stat().st_mtime, reverse=True)
+    for old in files[keep:]:
+        old.unlink()
+
+
+# ── Proteger el DB en ubicación externa al bundle ─────────────────────────────
+DB_PATH, APP_DATA_DIR = resolve_user_db_path()
+os.environ['SMARTFILM_DB_PATH'] = DB_PATH
+os.environ['SMARTFILM_DATA_DIR'] = str(APP_DATA_DIR)
+auto_backup(DB_PATH, APP_DATA_DIR)
 
 def get_free_port():
     import socket

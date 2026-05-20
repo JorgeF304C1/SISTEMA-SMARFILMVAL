@@ -14,12 +14,26 @@ import sys
 block_cipher = None
 
 # ── Data files to bundle ───────────────────────────────────────────────────────
+import glob
+
+# Locate webview/lib across Windows and macOS venv layouts
+_webview_lib_candidates = [
+    r'venv\Lib\site-packages\webview\lib',                    # Windows
+    'venv/lib/python3.9/site-packages/webview/lib',           # macOS py3.9
+    'venv/lib/python3.10/site-packages/webview/lib',
+    'venv/lib/python3.11/site-packages/webview/lib',
+    'venv/lib/python3.12/site-packages/webview/lib',
+]
+_webview_lib = next((p for p in _webview_lib_candidates if os.path.exists(p)), None)
+
 datas = [
     # Compiled React frontend (run `npm run build` first)
     ('static_frontend', 'static_frontend'),
-    # pywebview runtimes — all three platforms needed at module load time
-    (r'venv\Lib\site-packages\webview\lib', r'webview\lib'),
+    # DB template: used only on first run if user has no DB yet
+    ('smartfilm_seed.db', '.'),
 ]
+if _webview_lib:
+    datas.append((_webview_lib, 'webview/lib'))
 
 # ── Hidden imports (modules PyInstaller misses via static analysis) ─────────────
 hiddenimports = [
@@ -108,7 +122,7 @@ exe = EXE(
     target_arch=None,
     codesign_identity=None,
     entitlements_file=None,
-    icon='assets/icon.ico',
+    icon='assets/icon.icns' if sys.platform == 'darwin' else 'assets/icon.ico',
 )
 
 coll = COLLECT(
@@ -121,3 +135,18 @@ coll = COLLECT(
     upx_exclude=[],
     name='SmartFilm_Valencia',
 )
+
+if sys.platform == 'darwin':
+    app = BUNDLE(
+        coll,
+        name='SmartFilm_Valencia.app',
+        icon='assets/icon.icns' if os.path.exists('assets/icon.icns') else None,
+        bundle_identifier='com.smartfilm.valencia',
+        info_plist={
+            'CFBundleName': 'Smart Film Valencia',
+            'CFBundleDisplayName': 'Smart Film Valencia',
+            'CFBundleShortVersionString': '1.0.0',
+            'NSHighResolutionCapable': True,
+            'LSBackgroundOnly': False,
+        },
+    )

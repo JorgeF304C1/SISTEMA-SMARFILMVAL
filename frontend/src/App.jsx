@@ -187,7 +187,7 @@ function App() {
           <Route path="/users" element={<UsersPage />} />
           <Route path="/projects/list" element={<ProjectsPage />} />
           <Route path="/projects/new" element={<NewProject />} />
-          <Route path="/projects/:id" element={<ProjectDetail />} />
+          <Route path="/projects/:id" element={<ProjectDetail user={user} />} />
           <Route path="/settings" element={<SettingsPage />} />
         </Routes>
       </main>

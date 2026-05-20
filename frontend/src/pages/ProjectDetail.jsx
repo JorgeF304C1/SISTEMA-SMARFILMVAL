@@ -6,9 +6,10 @@ import { generateAndSavePDF } from '../utils/pdfUtils';
 
 const API_URL = "/api/v1";
 
-export default function ProjectDetail() {
+export default function ProjectDetail({ user }) {
   const { id } = useParams();
   const navigate = useNavigate();
+  const isAdmin = user?.role === 'Admin';
   const [project, setProject] = useState(null);
   const [metrics, setMetrics] = useState(null);
   const [consumptionBreakdown, setConsumptionBreakdown] = useState([]);
@@ -360,7 +361,7 @@ export default function ProjectDetail() {
 
       {/* Tabs */}
       <div style={{ display: 'flex', gap: '8px', marginBottom: '24px', borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '16px' }}>
-        {['resumen', 'áreas', 'gastos', 'fotos', 'documentos'].map(tab => (
+        {['resumen', 'áreas', ...(isAdmin ? ['gastos'] : []), 'fotos', 'documentos'].map(tab => (
           <button 
             key={tab} 
             onClick={() => setActiveTab(tab)}
@@ -424,70 +425,83 @@ export default function ProjectDetail() {
             
             <p style={{ marginBottom: '16px' }}>Metros Lineales (Real): <strong style={{color: 'var(--accent-cyan)'}}>{metrics.linear_meters} ml</strong></p>
             
-            <hr style={{ border: 'none', borderTop: '1px solid rgba(255,255,255,0.1)', margin: '16px 0' }} />
-            <h4 style={{ marginBottom: '12px', color: 'var(--text-muted)' }}>Desglose Contable</h4>
-            <p style={{ marginBottom: '8px', display: 'flex', justifyContent: 'space-between' }}>
-              <span>Ingreso Bruto (Venta):</span>
-              <strong>${metrics.total_income}</strong>
-            </p>
-            <p style={{ marginBottom: '8px', color: 'var(--text-muted)', display: 'flex', justifyContent: 'space-between' }}>
-              <span>Costo de Material:</span>
-              <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                {isEditingBaseCost ? (
-                  <span style={{ display: 'flex', gap: '4px' }}>
-                    <input 
-                      type="number" step="0.1" 
-                      value={tempBaseCost} 
-                      onChange={e => setTempBaseCost(e.target.value)}
-                      style={{ background: 'transparent', color: 'white', border: '1px solid rgba(255,255,255,0.2)', borderRadius: '4px', padding: '2px 4px', width: '60px', outline: 'none', fontSize: '13px' }}
-                    />
-                    <button onClick={handleUpdateBaseCost} style={{ background: 'var(--success-green)', color: 'white', border: 'none', borderRadius: '4px', padding: '2px 6px', cursor: 'pointer', fontSize: '11px' }}>OK</button>
-                    <button onClick={() => { setIsEditingBaseCost(false); setTempBaseCost(project.base_cost_per_ml.toString()); }} style={{ background: 'transparent', color: '#fca5a5', border: '1px solid #fca5a5', borderRadius: '4px', padding: '2px 4px', cursor: 'pointer', fontSize: '11px' }}>X</button>
+            {isAdmin && (
+              <>
+                <hr style={{ border: 'none', borderTop: '1px solid rgba(255,255,255,0.1)', margin: '16px 0' }} />
+                <h4 style={{ marginBottom: '12px', color: 'var(--text-muted)' }}>Desglose Contable</h4>
+                <p style={{ marginBottom: '8px', display: 'flex', justifyContent: 'space-between' }}>
+                  <span>Ingreso Bruto (Venta):</span>
+                  <strong>${metrics.total_income}</strong>
+                </p>
+                <p style={{ marginBottom: '8px', color: 'var(--text-muted)', display: 'flex', justifyContent: 'space-between' }}>
+                  <span>Costo de Material:</span>
+                  <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    {isEditingBaseCost ? (
+                      <span style={{ display: 'flex', gap: '4px' }}>
+                        <input
+                          type="number" step="0.1"
+                          value={tempBaseCost}
+                          onChange={e => setTempBaseCost(e.target.value)}
+                          style={{ background: 'transparent', color: 'white', border: '1px solid rgba(255,255,255,0.2)', borderRadius: '4px', padding: '2px 4px', width: '60px', outline: 'none', fontSize: '13px' }}
+                        />
+                        <button onClick={handleUpdateBaseCost} style={{ background: 'var(--success-green)', color: 'white', border: 'none', borderRadius: '4px', padding: '2px 6px', cursor: 'pointer', fontSize: '11px' }}>OK</button>
+                        <button onClick={() => { setIsEditingBaseCost(false); setTempBaseCost(project.base_cost_per_ml.toString()); }} style={{ background: 'transparent', color: '#fca5a5', border: '1px solid #fca5a5', borderRadius: '4px', padding: '2px 4px', cursor: 'pointer', fontSize: '11px' }}>X</button>
+                      </span>
+                    ) : (
+                      <span>
+                        (${project.base_cost_per_ml}/ml) <button onClick={() => setIsEditingBaseCost(true)} style={{ background: 'transparent', border: 'none', color: 'var(--accent-cyan)', cursor: 'pointer', fontSize: '11px', textDecoration: 'underline' }}>Editar</button>
+                      </span>
+                    )}
+                    <span>${metrics.material_cost}</span>
                   </span>
-                ) : (
-                  <span>
-                    (${project.base_cost_per_ml}/ml) <button onClick={() => setIsEditingBaseCost(true)} style={{ background: 'transparent', border: 'none', color: 'var(--accent-cyan)', cursor: 'pointer', fontSize: '11px', textDecoration: 'underline' }}>Editar</button>
+                </p>
+                <p style={{ marginBottom: '8px', color: 'var(--text-muted)', display: 'flex', justifyContent: 'space-between' }}>
+                  <span>Costo de Personal (Instalación):</span>
+                  <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    {isEditingLaborCost ? (
+                      <span style={{ display: 'flex', gap: '4px' }}>
+                        <input
+                          type="number" step="0.1"
+                          value={tempLaborCost}
+                          onChange={e => setTempLaborCost(e.target.value)}
+                          style={{ background: 'transparent', color: 'white', border: '1px solid rgba(255,255,255,0.2)', borderRadius: '4px', padding: '2px 4px', width: '60px', outline: 'none', fontSize: '13px' }}
+                        />
+                        <button onClick={handleUpdateLaborCost} style={{ background: 'var(--success-green)', color: 'white', border: 'none', borderRadius: '4px', padding: '2px 6px', cursor: 'pointer', fontSize: '11px' }}>OK</button>
+                        <button onClick={() => { setIsEditingLaborCost(false); setTempLaborCost(project.labor_cost_per_sqm.toString()); }} style={{ background: 'transparent', color: '#fca5a5', border: '1px solid #fca5a5', borderRadius: '4px', padding: '2px 4px', cursor: 'pointer', fontSize: '11px' }}>X</button>
+                      </span>
+                    ) : (
+                      <span>
+                        (${project.labor_cost_per_sqm}/m²) <button onClick={() => setIsEditingLaborCost(true)} style={{ background: 'transparent', border: 'none', color: 'var(--accent-cyan)', cursor: 'pointer', fontSize: '11px', textDecoration: 'underline' }}>Editar</button>
+                      </span>
+                    )}
+                    <span>${metrics.labor_cost}</span>
                   </span>
-                )}
-                <span>${metrics.material_cost}</span>
-              </span>
-            </p>
-            <p style={{ marginBottom: '8px', color: 'var(--text-muted)', display: 'flex', justifyContent: 'space-between' }}>
-              <span>Costo de Personal (Instalación):</span>
-              <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                {isEditingLaborCost ? (
-                  <span style={{ display: 'flex', gap: '4px' }}>
-                    <input 
-                      type="number" step="0.1" 
-                      value={tempLaborCost} 
-                      onChange={e => setTempLaborCost(e.target.value)}
-                      style={{ background: 'transparent', color: 'white', border: '1px solid rgba(255,255,255,0.2)', borderRadius: '4px', padding: '2px 4px', width: '60px', outline: 'none', fontSize: '13px' }}
-                    />
-                    <button onClick={handleUpdateLaborCost} style={{ background: 'var(--success-green)', color: 'white', border: 'none', borderRadius: '4px', padding: '2px 6px', cursor: 'pointer', fontSize: '11px' }}>OK</button>
-                    <button onClick={() => { setIsEditingLaborCost(false); setTempLaborCost(project.labor_cost_per_sqm.toString()); }} style={{ background: 'transparent', color: '#fca5a5', border: '1px solid #fca5a5', borderRadius: '4px', padding: '2px 4px', cursor: 'pointer', fontSize: '11px' }}>X</button>
-                  </span>
-                ) : (
-                  <span>
-                    (${project.labor_cost_per_sqm}/m²) <button onClick={() => setIsEditingLaborCost(true)} style={{ background: 'transparent', border: 'none', color: 'var(--accent-cyan)', cursor: 'pointer', fontSize: '11px', textDecoration: 'underline' }}>Editar</button>
-                  </span>
-                )}
-                <span>${metrics.labor_cost}</span>
-              </span>
-            </p>
-            <p style={{ marginBottom: '8px', color: 'var(--text-muted)', display: 'flex', justifyContent: 'space-between' }}>
-              <span>Otros Gastos (Variables):</span>
-              <span>${metrics.variable_expenses}</span>
-            </p>
-            <div style={{ padding: '8px', background: 'rgba(239, 68, 68, 0.05)', borderRadius: '6px', marginTop: '8px' }}>
-              <p style={{ display: 'flex', justifyContent: 'space-between', color: '#ff7b7b' }}>
-                <span>Egresos Totales:</span>
-                <strong>${metrics.total_expenses}</strong>
-              </p>
-            </div>
+                </p>
+                <p style={{ marginBottom: '8px', color: 'var(--text-muted)', display: 'flex', justifyContent: 'space-between' }}>
+                  <span>Otros Gastos (Variables):</span>
+                  <span>${metrics.variable_expenses}</span>
+                </p>
+                <div style={{ padding: '8px', background: 'rgba(239, 68, 68, 0.05)', borderRadius: '6px', marginTop: '8px' }}>
+                  <p style={{ display: 'flex', justifyContent: 'space-between', color: '#ff7b7b' }}>
+                    <span>Egresos Totales:</span>
+                    <strong>${metrics.total_expenses}</strong>
+                  </p>
+                </div>
+              </>
+            )}
           </div>
           <div style={{ background: 'rgba(16, 185, 129, 0.1)', border: '1px solid var(--success-green)', padding: '32px', borderRadius: '12px', textAlign: 'center', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-            <h3 style={{ color: 'var(--success-green)', marginBottom: '12px', fontSize: '24px' }}>Ganancia Neta</h3>
-            <h1 style={{ fontSize: '56px', color: 'var(--success-green)', margin: 0 }}>${metrics.net_profit}</h1>
+            {isAdmin ? (
+              <>
+                <h3 style={{ color: 'var(--success-green)', marginBottom: '12px', fontSize: '24px' }}>Ganancia Neta</h3>
+                <h1 style={{ fontSize: '56px', color: 'var(--success-green)', margin: 0 }}>${metrics.net_profit}</h1>
+              </>
+            ) : (
+              <>
+                <h3 style={{ color: 'var(--success-green)', marginBottom: '12px', fontSize: '24px' }}>Total</h3>
+                <h1 style={{ fontSize: '56px', color: 'var(--success-green)', margin: 0 }}>${metrics.total_income}</h1>
+              </>
+            )}
           </div>
         </div>
       )}

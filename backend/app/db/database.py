@@ -1,7 +1,9 @@
+import os
 from sqlalchemy import create_engine
 from sqlalchemy.orm import declarative_base, sessionmaker
 
-SQLALCHEMY_DATABASE_URL = "sqlite:///./smartfilm.db"
+DB_PATH = os.environ.get('SMARTFILM_DB_PATH', './smartfilm.db')
+SQLALCHEMY_DATABASE_URL = f"sqlite:///{DB_PATH}"
 
 # Setting check_same_thread to False is needed only for SQLite
 engine = create_engine(

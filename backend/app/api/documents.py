@@ -4,9 +4,11 @@ Al generar un documento, se guarda en la carpeta correcta y se abre el explorado
 """
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
+from typing import Optional
 import os
 import base64
 import subprocess
+import platform
 from datetime import datetime
 
 router = APIRouter(prefix="/documents", tags=["Documents"])
@@ -20,7 +22,8 @@ else:
     # Dev mode — go up from app/api/ to project root
     _APP_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../../"))
 
-BASE_DOCS_DIR = os.path.join(_APP_DIR, "local_storage", "documentos")
+_DATA_DIR = os.environ.get('SMARTFILM_DATA_DIR', _APP_DIR)
+BASE_DOCS_DIR = os.path.join(_DATA_DIR, "local_storage", "documentos")
 
 # Sub-carpetas por tipo
 DOC_TYPE_DIRS = {
@@ -32,8 +35,8 @@ DOC_TYPE_DIRS = {
 class GenerateDocRequest(BaseModel):
     doc_type: str          # "express" | "cotizacion" | "nota_entrega"
     pdf_base64: str        # El PDF como base64 enviado desde el frontend
-    project_id: int | None = None
-    project_name: str | None = None
+    project_id: Optional[int] = None
+    project_name: Optional[str] = None
     client_name: str = "Cliente"
 
 class GenerateDocResponse(BaseModel):
@@ -116,7 +119,12 @@ def open_folder(folder_path: str):
     if not os.path.exists(folder_path):
         raise HTTPException(status_code=404, detail="Carpeta no encontrada")
     try:
-        subprocess.Popen(f'explorer "{folder_path}"')
+        if platform.system() == 'Darwin':
+            subprocess.Popen(['open', folder_path])
+        elif platform.system() == 'Windows':
+            subprocess.Popen(f'explorer "{folder_path}"')
+        else:
+            subprocess.Popen(['xdg-open', folder_path])
         return {"success": True}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
@@ -135,7 +143,12 @@ def open_folder_post(req: OpenFolderRequest):
         folder_path = BASE_DOCS_DIR
         os.makedirs(folder_path, exist_ok=True)
     try:
-        subprocess.Popen(f'explorer "{folder_path}"')
+        if platform.system() == 'Darwin':
+            subprocess.Popen(['open', folder_path])
+        elif platform.system() == 'Windows':
+            subprocess.Popen(f'explorer "{folder_path}"')
+        else:
+            subprocess.Popen(['xdg-open', folder_path])
         return {"success": True}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
