@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { ArrowLeft, Box, DollarSign, FileDown, Plus, Trash2, Camera, Upload } from 'lucide-react';
+import { ArrowLeft, Box, DollarSign, FileDown, Plus, Trash2, Camera, Upload, Scissors, TrendingDown } from 'lucide-react';
 import { generateAndSavePDF } from '../utils/pdfUtils';
 
 const API_URL = "/api/v1";
@@ -21,7 +21,7 @@ export default function ProjectDetail({ user }) {
   const fileInputRef = useRef(null);
   
   const [newArea, setNewArea] = useState({ name: '', width: '', height: '' });
-  const [newExpense, setNewExpense] = useState({ description: '', amount: '', expense_type: 'Variable' });
+  const [newExpense, setNewExpense] = useState({ description: '', amount: '', expense_type: 'Variable', category: '' });
   const [isEditingPrice, setIsEditingPrice] = useState(false);
   const [tempPrice, setTempPrice] = useState("");
   const [isEditingRollWidth, setIsEditingRollWidth] = useState(false);
@@ -35,6 +35,8 @@ export default function ProjectDetail({ user }) {
   const [pdfStates, setPdfStates] = useState({
     cotizacion: { generating: false, feedback: null },
     nota_entrega: { generating: false, feedback: null },
+    cortes: { generating: false, feedback: null },
+    desperdicio: { generating: false, feedback: null },
   });
 
   const setPdfState = (type, updates) => {
@@ -245,11 +247,26 @@ export default function ProjectDetail({ user }) {
         <table style="width: 100%; border-collapse: collapse; margin-bottom: 30px;">
           <tr style="background: #f4f4f4;">
             <th style="padding: 10px; border: 1px solid #ddd; text-align: left;">Concepto</th>
-            <th style="padding: 10px; border: 1px solid #ddd; text-align: right;">Total</th>
+            <th style="padding: 10px; border: 1px solid #ddd; text-align: center;">Cant.</th>
+            <th style="padding: 10px; border: 1px solid #ddd; text-align: right;">P. Unit.</th>
+            <th style="padding: 10px; border: 1px solid #ddd; text-align: right;">Subtotal</th>
           </tr>
           <tr>
-            <td style="padding: 10px; border: 1px solid #ddd;">Instalación SmartFilm (${metrics.linear_meters} ml x Precio $${project.price_per_ml})</td>
-            <td style="padding: 10px; border: 1px solid #ddd; text-align: right; font-size: 18px;"><strong>$${metrics.total_income}</strong></td>
+            <td style="padding: 10px; border: 1px solid #ddd;">Instalación SmartFilm</td>
+            <td style="padding: 10px; border: 1px solid #ddd; text-align: center;">${metrics.linear_meters} ml</td>
+            <td style="padding: 10px; border: 1px solid #ddd; text-align: right;">$${project.price_per_ml}</td>
+            <td style="padding: 10px; border: 1px solid #ddd; text-align: right;"><strong>$${metrics.base_income}</strong></td>
+          </tr>
+          ${expenses.filter(e => e.expense_type === 'Recargo' && !e.is_nullified).map(e => `
+          <tr>
+            <td style="padding: 10px; border: 1px solid #ddd;">${e.description}${e.category ? ` <span style="color:#666;font-size:12px;">(${e.category})</span>` : ''}</td>
+            <td style="padding: 10px; border: 1px solid #ddd; text-align: center; color:#666;">—</td>
+            <td style="padding: 10px; border: 1px solid #ddd; text-align: right; color:#666;">—</td>
+            <td style="padding: 10px; border: 1px solid #ddd; text-align: right;"><strong>$${e.amount}</strong></td>
+          </tr>`).join('')}
+          <tr style="background: #f0f7ff;">
+            <td colspan="3" style="padding: 12px; border: 1px solid #ddd; text-align: right; font-weight: bold; font-size: 15px;">TOTAL</td>
+            <td style="padding: 12px; border: 1px solid #ddd; text-align: right; font-size: 20px; color: #0070f3;"><strong>$${metrics.total_income}</strong></td>
           </tr>
         </table>
         <div style="margin-top: 50px; text-align: center; font-size: 11px; color: #999; border-top: 1px solid #ddd; padding-top: 20px;">
@@ -298,11 +315,26 @@ export default function ProjectDetail({ user }) {
         <table style="width: 100%; border-collapse: collapse; margin-bottom: 30px;">
           <tr style="background: #f4f4f4;">
             <th style="padding: 10px; border: 1px solid #ddd; text-align: left;">Concepto</th>
-            <th style="padding: 10px; border: 1px solid #ddd; text-align: right;">Total</th>
+            <th style="padding: 10px; border: 1px solid #ddd; text-align: center;">Cant.</th>
+            <th style="padding: 10px; border: 1px solid #ddd; text-align: right;">P. Unit.</th>
+            <th style="padding: 10px; border: 1px solid #ddd; text-align: right;">Subtotal</th>
           </tr>
           <tr>
-            <td style="padding: 10px; border: 1px solid #ddd;">Instalación SmartFilm (${metrics.linear_meters} ml x $${project.price_per_ml})</td>
-            <td style="padding: 10px; border: 1px solid #ddd; text-align: right; font-size: 18px;"><strong>$${metrics.total_income}</strong></td>
+            <td style="padding: 10px; border: 1px solid #ddd;">Instalación SmartFilm</td>
+            <td style="padding: 10px; border: 1px solid #ddd; text-align: center;">${metrics.linear_meters} ml</td>
+            <td style="padding: 10px; border: 1px solid #ddd; text-align: right;">$${project.price_per_ml}</td>
+            <td style="padding: 10px; border: 1px solid #ddd; text-align: right;"><strong>$${metrics.base_income}</strong></td>
+          </tr>
+          ${expenses.filter(e => e.expense_type === 'Recargo' && !e.is_nullified).map(e => `
+          <tr>
+            <td style="padding: 10px; border: 1px solid #ddd;">${e.description}${e.category ? ` <span style="color:#666;font-size:12px;">(${e.category})</span>` : ''}</td>
+            <td style="padding: 10px; border: 1px solid #ddd; text-align: center; color:#666;">—</td>
+            <td style="padding: 10px; border: 1px solid #ddd; text-align: right; color:#666;">—</td>
+            <td style="padding: 10px; border: 1px solid #ddd; text-align: right;"><strong>$${e.amount}</strong></td>
+          </tr>`).join('')}
+          <tr style="background: #f0f7ff;">
+            <td colspan="3" style="padding: 12px; border: 1px solid #ddd; text-align: right; font-weight: bold; font-size: 15px;">TOTAL</td>
+            <td style="padding: 12px; border: 1px solid #ddd; text-align: right; font-size: 20px; color: #0070f3;"><strong>$${metrics.total_income}</strong></td>
           </tr>
         </table>
         <div style="margin-top: 30px; padding: 20px; background: #f9f9f9; border-radius: 8px;">
@@ -334,6 +366,185 @@ export default function ProjectDetail({ user }) {
         setTimeout(() => setPdfState('nota_entrega', { feedback: null }), 5000);
       },
       onError: (msg) => setPdfState('nota_entrega', { generating: false, feedback: { type: 'error', msg: `❌ ${msg}` } }),
+    });
+  };
+
+  const generateCutDiagramPDF = async () => {
+    const rowsHtml = consumptionBreakdown.map((row, index) => {
+      const piecesHtml = row.pieces.map(piece => {
+        const widthPct = (piece.width / project.roll_width) * 100;
+        return `<div style="width:${widthPct}%;height:100%;border-right:1px solid rgba(0,0,0,0.2);background:rgba(14,165,233,0.25);position:relative;display:inline-block;vertical-align:top;">
+          <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:10px;text-align:center;padding:2px;overflow:hidden;">
+            <strong style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;">${piece.original_area_name}</strong>
+            <span>${piece.width}m × ${piece.height}m</span>
+          </div>
+        </div>`;
+      }).join('');
+      const freeWidth = project.roll_width - row.current_width;
+      const freePct = (freeWidth / project.roll_width) * 100;
+      const freeHtml = freeWidth > 0.001
+        ? `<div style="width:${freePct}%;height:100%;background:rgba(239,68,68,0.15);display:inline-block;vertical-align:top;"><div style="display:flex;align-items:center;justify-content:center;height:100%;font-size:10px;color:#cc0000;">Libre: ${freeWidth.toFixed(3)}m</div></div>`
+        : '';
+      const pageBreak = index > 0 ? '<div style="page-break-before:always;"></div>' : '';
+      return `${pageBreak}
+        <div style="margin-bottom:20px;border:1px solid #ddd;border-radius:6px;padding:12px;">
+          <div style="display:flex;justify-content:space-between;margin-bottom:8px;">
+            <strong style="color:#0070f3;">Fila ${index + 1} de ${consumptionBreakdown.length}</strong>
+            <span style="font-size:12px;color:#666;">Metro Lineal a Cortar: <strong>${row.max_height} m</strong></span>
+          </div>
+          <div style="width:100%;height:70px;background:#f9f9f9;border:1px solid #ddd;border-radius:4px;overflow:hidden;white-space:nowrap;">
+            ${piecesHtml}${freeHtml}
+          </div>
+          <table style="width:100%;border-collapse:collapse;margin-top:8px;font-size:12px;">
+            <tr style="background:#f4f4f4;"><th style="padding:6px;border:1px solid #ddd;">Pieza</th><th style="padding:6px;border:1px solid #ddd;">Ancho</th><th style="padding:6px;border:1px solid #ddd;">Alto</th><th style="padding:6px;border:1px solid #ddd;">m²</th></tr>
+            ${row.pieces.map(p => `<tr><td style="padding:6px;border:1px solid #ddd;">${p.original_area_name}</td><td style="padding:6px;border:1px solid #ddd;">${p.width}m</td><td style="padding:6px;border:1px solid #ddd;">${p.height}m</td><td style="padding:6px;border:1px solid #ddd;">${(p.width * p.height).toFixed(3)} m²</td></tr>`).join('')}
+          </table>
+        </div>`;
+    }).join('');
+
+    const totalPieces = consumptionBreakdown.reduce((acc, r) => acc + r.pieces.length, 0);
+    const areasTableHtml = areas.map(a => `<tr><td style="padding:8px;border:1px solid #ddd;">${a.name || '—'}</td><td style="padding:8px;border:1px solid #ddd;">${a.width}m</td><td style="padding:8px;border:1px solid #ddd;">${a.height}m</td><td style="padding:8px;border:1px solid #ddd;">${(a.width * a.height).toFixed(2)} m²</td></tr>`).join('');
+
+    const element = document.createElement('div');
+    element.innerHTML = `
+      <div style="font-family:Arial,sans-serif;padding:32px;color:#333;background:white;">
+        <div style="text-align:center;border-bottom:2px solid #0070f3;padding-bottom:16px;margin-bottom:24px;">
+          <img src="/logo.png" style="max-height:50px;margin-bottom:8px;" crossorigin="anonymous" />
+          <h1 style="color:#0070f3;margin:4px 0 0;">PLANO DE CORTES OPERATIVOS</h1>
+          <p style="margin:4px 0;color:#666;font-size:13px;">${project.name} — Cliente: ${project.client_name}</p>
+          <p style="margin:0;color:#999;font-size:12px;">Generado: ${new Date().toLocaleDateString()}</p>
+        </div>
+        <div style="display:flex;gap:16px;margin-bottom:24px;">
+          <div style="flex:1;background:#f0f7ff;border:1px solid #0070f3;border-radius:8px;padding:12px;text-align:center;">
+            <div style="font-size:22px;font-weight:bold;color:#0070f3;">${metrics.total_area_sqm} m²</div>
+            <div style="font-size:12px;color:#666;">m² Instalados</div>
+          </div>
+          <div style="flex:1;background:#f0fff4;border:1px solid #10b981;border-radius:8px;padding:12px;text-align:center;">
+            <div style="font-size:22px;font-weight:bold;color:#10b981;">${metrics.linear_meters} ml</div>
+            <div style="font-size:12px;color:#666;">Metros Lineales</div>
+          </div>
+          <div style="flex:1;background:#fff8f0;border:1px solid #f59e0b;border-radius:8px;padding:12px;text-align:center;">
+            <div style="font-size:22px;font-weight:bold;color:#f59e0b;">${metrics.efficiency_percentage}%</div>
+            <div style="font-size:12px;color:#666;">Eficiencia</div>
+          </div>
+          <div style="flex:1;background:#f9f9f9;border:1px solid #ddd;border-radius:8px;padding:12px;text-align:center;">
+            <div style="font-size:22px;font-weight:bold;">${consumptionBreakdown.length}</div>
+            <div style="font-size:12px;color:#666;">Filas / Cortes</div>
+          </div>
+        </div>
+        <h3 style="margin-bottom:8px;">Áreas del Proyecto (${areas.length} áreas, ${totalPieces} piezas)</h3>
+        <table style="width:100%;border-collapse:collapse;margin-bottom:24px;font-size:13px;">
+          <tr style="background:#f4f4f4;"><th style="padding:8px;border:1px solid #ddd;">Identificador</th><th style="padding:8px;border:1px solid #ddd;">Ancho</th><th style="padding:8px;border:1px solid #ddd;">Alto</th><th style="padding:8px;border:1px solid #ddd;">Área m²</th></tr>
+          ${areasTableHtml}
+        </table>
+        <div style="page-break-before:always;"></div>
+        <h3 style="margin-bottom:16px;color:#0070f3;">Diagrama de Corte — Rollo ${project.roll_width}m de ancho</h3>
+        ${rowsHtml}
+        <div style="margin-top:32px;text-align:center;font-size:11px;color:#999;border-top:1px solid #ddd;padding-top:16px;">
+          <p>Smart Film Valencia · Plano generado para uso operativo del instalador</p>
+        </div>
+      </div>
+    `;
+
+    await generateAndSavePDF({
+      element,
+      filename: `Cortes_${project.client_name}`,
+      docType: 'cortes',
+      projectId: project.id,
+      projectName: project.name,
+      clientName: project.client_name,
+      pdfOptions: { pagebreak: { mode: ['avoid-all', 'css'] } },
+      onStart: () => setPdfState('cortes', { generating: true, feedback: null }),
+      onSuccess: (result) => {
+        setPdfState('cortes', { generating: false, feedback: { type: 'success', msg: `✅ Guardado: ${result.filename}` } });
+        setTimeout(() => setPdfState('cortes', { feedback: null }), 5000);
+      },
+      onError: (msg) => setPdfState('cortes', { generating: false, feedback: { type: 'error', msg: `❌ ${msg}` } }),
+    });
+  };
+
+  const generateWasteReportPDF = async () => {
+    const rowsTableHtml = consumptionBreakdown.map((row, index) => {
+      const freeWidth = project.roll_width - row.current_width;
+      const wasteSqm = row.max_height * Math.max(0, freeWidth);
+      return `<tr style="${index % 2 === 0 ? 'background:#f9f9f9;' : ''}">
+        <td style="padding:8px;border:1px solid #ddd;text-align:center;">${index + 1}</td>
+        <td style="padding:8px;border:1px solid #ddd;text-align:center;">${row.max_height} m</td>
+        <td style="padding:8px;border:1px solid #ddd;text-align:center;">${row.current_width.toFixed(3)} m</td>
+        <td style="padding:8px;border:1px solid #ddd;text-align:center;color:${freeWidth > 0.001 ? '#dc2626' : '#10b981'};">${Math.max(0, freeWidth).toFixed(3)} m</td>
+        <td style="padding:8px;border:1px solid #ddd;text-align:center;font-weight:bold;color:${wasteSqm > 0.01 ? '#dc2626' : '#10b981'};">${wasteSqm.toFixed(3)} m²</td>
+      </tr>`;
+    }).join('');
+
+    const element = document.createElement('div');
+    element.innerHTML = `
+      <div style="font-family:Arial,sans-serif;padding:32px;color:#333;background:white;">
+        <div style="text-align:center;border-bottom:2px solid #0070f3;padding-bottom:16px;margin-bottom:24px;">
+          <img src="/logo.png" style="max-height:50px;margin-bottom:8px;" crossorigin="anonymous" />
+          <h1 style="color:#0070f3;margin:4px 0 0;">REPORTE DE DESPERDICIO DE MATERIAL</h1>
+          <p style="margin:4px 0;color:#666;font-size:13px;">${project.name} — Cliente: ${project.client_name}</p>
+          <p style="margin:0;color:#999;font-size:12px;">Generado: ${new Date().toLocaleDateString()}</p>
+        </div>
+
+        <div style="display:flex;gap:16px;margin-bottom:24px;">
+          <div style="flex:1;background:#f0f7ff;border:1px solid #0070f3;border-radius:8px;padding:16px;text-align:center;">
+            <div style="font-size:28px;font-weight:bold;color:#0070f3;">${metrics.total_area_sqm} m²</div>
+            <div style="font-size:12px;color:#666;">Material Instalado</div>
+          </div>
+          <div style="flex:1;background:#f9f9f9;border:1px solid #ddd;border-radius:8px;padding:16px;text-align:center;">
+            <div style="font-size:28px;font-weight:bold;">${metrics.total_material_sqm} m²</div>
+            <div style="font-size:12px;color:#666;">Material Consumido</div>
+          </div>
+          <div style="flex:1;background:#fff0f0;border:2px solid #dc2626;border-radius:8px;padding:16px;text-align:center;">
+            <div style="font-size:28px;font-weight:bold;color:#dc2626;">${metrics.waste_m2} m²</div>
+            <div style="font-size:12px;color:#666;">Total Desperdiciado</div>
+          </div>
+          <div style="flex:1;background:#f0fff4;border:1px solid #10b981;border-radius:8px;padding:16px;text-align:center;">
+            <div style="font-size:28px;font-weight:bold;color:#10b981;">${metrics.efficiency_percentage}%</div>
+            <div style="font-size:12px;color:#666;">Eficiencia</div>
+          </div>
+        </div>
+
+        <p style="font-size:13px;color:#555;background:#fffbeb;border:1px solid #f59e0b;padding:12px;border-radius:6px;margin-bottom:24px;">
+          Este reporte detalla el desperdicio derivado del corte óptimo (bin-packing) del rollo de <strong>${project.roll_width}m de ancho</strong>.
+          El material libre al final de cada fila no puede utilizarse sin generar cortes adicionales.
+        </p>
+
+        <h3 style="margin-bottom:12px;">Desglose por Fila de Corte</h3>
+        <table style="width:100%;border-collapse:collapse;font-size:13px;">
+          <tr style="background:#0070f3;color:white;">
+            <th style="padding:10px;border:1px solid #ddd;">Fila</th>
+            <th style="padding:10px;border:1px solid #ddd;">Altura (ml)</th>
+            <th style="padding:10px;border:1px solid #ddd;">Ancho Usado</th>
+            <th style="padding:10px;border:1px solid #ddd;">Ancho Libre</th>
+            <th style="padding:10px;border:1px solid #ddd;">m² Desperdicio</th>
+          </tr>
+          ${rowsTableHtml}
+          <tr style="background:#fee2e2;font-weight:bold;">
+            <td colspan="4" style="padding:10px;border:1px solid #ddd;text-align:right;">TOTAL DESPERDICIADO:</td>
+            <td style="padding:10px;border:1px solid #ddd;text-align:center;color:#dc2626;">${metrics.waste_m2} m²</td>
+          </tr>
+        </table>
+
+        <div style="margin-top:32px;text-align:center;font-size:11px;color:#999;border-top:1px solid #ddd;padding-top:16px;">
+          <p>Smart Film Valencia · Reporte generado automáticamente por el sistema de gestión</p>
+        </div>
+      </div>
+    `;
+
+    await generateAndSavePDF({
+      element,
+      filename: `Desperdicio_${project.client_name}`,
+      docType: 'desperdicio',
+      projectId: project.id,
+      projectName: project.name,
+      clientName: project.client_name,
+      onStart: () => setPdfState('desperdicio', { generating: true, feedback: null }),
+      onSuccess: (result) => {
+        setPdfState('desperdicio', { generating: false, feedback: { type: 'success', msg: `✅ Guardado: ${result.filename}` } });
+        setTimeout(() => setPdfState('desperdicio', { feedback: null }), 5000);
+      },
+      onError: (msg) => setPdfState('desperdicio', { generating: false, feedback: { type: 'error', msg: `❌ ${msg}` } }),
     });
   };
 
@@ -430,7 +641,17 @@ export default function ProjectDetail({ user }) {
                 <hr style={{ border: 'none', borderTop: '1px solid rgba(255,255,255,0.1)', margin: '16px 0' }} />
                 <h4 style={{ marginBottom: '12px', color: 'var(--text-muted)' }}>Desglose Contable</h4>
                 <p style={{ marginBottom: '8px', display: 'flex', justifyContent: 'space-between' }}>
-                  <span>Ingreso Bruto (Venta):</span>
+                  <span>Venta Base (ml × precio):</span>
+                  <strong>${metrics.base_income}</strong>
+                </p>
+                {metrics.surcharges > 0 && (
+                  <p style={{ marginBottom: '8px', display: 'flex', justifyContent: 'space-between', color: 'var(--accent-cyan)' }}>
+                    <span>Recargos al Cliente:</span>
+                    <strong>+${metrics.surcharges}</strong>
+                  </p>
+                )}
+                <p style={{ marginBottom: '8px', display: 'flex', justifyContent: 'space-between', borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '8px' }}>
+                  <span>Total Cobrado al Cliente:</span>
                   <strong>${metrics.total_income}</strong>
                 </p>
                 <p style={{ marginBottom: '8px', color: 'var(--text-muted)', display: 'flex', justifyContent: 'space-between' }}>
@@ -610,8 +831,22 @@ export default function ProjectDetail({ user }) {
           <form onSubmit={handleAddExpense} className="glass-card">
             <h3 style={{ marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}><DollarSign size={20} /> Registrar Gasto</h3>
             <div style={{ marginBottom: '16px' }}>
+              <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', color: 'var(--text-muted)' }}>Tipo de Gasto</label>
+              <select value={newExpense.expense_type} onChange={e => setNewExpense({...newExpense, expense_type: e.target.value})} style={{ width: '100%', padding: '10px', borderRadius: '6px', background: 'rgba(0,0,0,0.5)', border: '1px solid rgba(255,255,255,0.1)', color: 'white', appearance: 'none' }}>
+                <option value="Variable">Variable (saca de ganancia)</option>
+                <option value="Recargo">Recargo (cobrar al cliente)</option>
+              </select>
+              <p style={{ marginTop: '6px', fontSize: '11px', color: newExpense.expense_type === 'Recargo' ? 'var(--accent-cyan)' : 'var(--text-muted)' }}>
+                {newExpense.expense_type === 'Recargo' ? '↑ Se suma al total cobrado en la cotización' : '↓ Baja tu ganancia neta'}
+              </p>
+            </div>
+            <div style={{ marginBottom: '16px' }}>
               <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', color: 'var(--text-muted)' }}>Descripción</label>
-              <input type="text" required value={newExpense.description} onChange={e => setNewExpense({...newExpense, description: e.target.value})} />
+              <input type="text" required value={newExpense.description} onChange={e => setNewExpense({...newExpense, description: e.target.value})} placeholder="Ej. Andamio, Viáticos, Gasolina" />
+            </div>
+            <div style={{ marginBottom: '16px' }}>
+              <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', color: 'var(--text-muted)' }}>Categoría <span style={{ color: 'var(--text-muted)', fontWeight: 'normal' }}>(opcional)</span></label>
+              <input type="text" value={newExpense.category} onChange={e => setNewExpense({...newExpense, category: e.target.value})} placeholder="Ej. Estructura, Materiales, Transporte" />
             </div>
             <div style={{ marginBottom: '16px' }}>
               <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', color: 'var(--text-muted)' }}>Monto ($)</label>
@@ -621,11 +856,12 @@ export default function ProjectDetail({ user }) {
           </form>
 
           <div className="glass-card">
-            <h3 style={{ marginBottom: '16px' }}>Historial de Gastos Extra</h3>
+            <h3 style={{ marginBottom: '16px' }}>Historial de Gastos</h3>
             <table style={{ width: '100%', textAlign: 'left', borderCollapse: 'collapse' }}>
               <thead>
                 <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
                   <th style={{ padding: '12px' }}>Descripción</th>
+                  <th style={{ padding: '12px' }}>Tipo</th>
                   <th style={{ padding: '12px' }}>Monto ($)</th>
                   <th style={{ padding: '12px', textAlign: 'right' }}>Acción</th>
                 </tr>
@@ -635,14 +871,24 @@ export default function ProjectDetail({ user }) {
                   <tr key={e.id || i} style={{ borderBottom: '1px solid rgba(255,255,255,0.05)', opacity: e.is_nullified ? 0.5 : 1 }}>
                     <td style={{ padding: '12px' }}>
                       {e.is_nullified ? <s>{e.description} (Anulado)</s> : e.description}
+                      {e.category && !e.is_nullified && <span style={{ display: 'block', fontSize: '11px', color: 'var(--text-muted)' }}>{e.category}</span>}
                     </td>
-                    <td style={{ padding: '12px', fontWeight: 600, color: e.is_nullified ? 'var(--text-muted)' : '#fca5a5' }}>
-                      {e.is_nullified ? <s>-${e.amount}</s> : `-$${e.amount}`}
+                    <td style={{ padding: '12px' }}>
+                      <span style={{
+                        padding: '3px 8px', borderRadius: '12px', fontSize: '11px', fontWeight: 600,
+                        background: e.expense_type === 'Recargo' ? 'rgba(34,211,238,0.15)' : 'rgba(239,68,68,0.1)',
+                        color: e.expense_type === 'Recargo' ? 'var(--accent-cyan)' : '#fca5a5',
+                      }}>
+                        {e.expense_type === 'Recargo' ? '↑ Recargo' : '↓ Variable'}
+                      </span>
+                    </td>
+                    <td style={{ padding: '12px', fontWeight: 600, color: e.is_nullified ? 'var(--text-muted)' : (e.expense_type === 'Recargo' ? 'var(--accent-cyan)' : '#fca5a5') }}>
+                      {e.is_nullified ? <s>{e.expense_type === 'Recargo' ? '+' : '-'}${e.amount}</s> : `${e.expense_type === 'Recargo' ? '+' : '-'}$${e.amount}`}
                     </td>
                     <td style={{ padding: '12px', textAlign: 'right' }}>
-                      <button 
-                        onClick={() => handleToggleExpense(e.id)} 
-                        className="btn-outline" 
+                      <button
+                        onClick={() => handleToggleExpense(e.id)}
+                        className="btn-outline"
                         style={{ padding: '4px 8px', fontSize: '11px', color: e.is_nullified ? 'var(--success-green)' : '#fca5a5', borderColor: 'transparent' }}
                       >
                         {e.is_nullified ? 'Restaurar' : 'Anular'}
@@ -751,6 +997,70 @@ export default function ProjectDetail({ user }) {
               >
                 <FileDown size={16} style={{ marginRight: '8px' }} />
                 {pdfStates.nota_entrega.generating ? 'Generando...' : 'Generar Nota de Entrega'}
+              </button>
+            )}
+          </div>
+
+          {/* Plano de Cortes */}
+          <div className="glass-card" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center',
+            opacity: consumptionBreakdown.length === 0 ? 0.5 : 1
+          }}>
+            <Scissors size={48} color="var(--accent-cyan)" style={{ marginBottom: '16px' }} />
+            <h3 style={{ marginBottom: '8px' }}>Plano de Cortes</h3>
+            <p style={{ color: 'var(--text-muted)', fontSize: '14px', marginBottom: '24px' }}>Diagrama operativo para el instalador con dimensiones exactas de cada pieza y su posición en el rollo. Multi-página.</p>
+            {pdfStates.cortes.feedback && (
+              <div style={{ marginBottom: '12px', padding: '8px 12px', borderRadius: '8px', fontSize: '13px',
+                background: pdfStates.cortes.feedback.type === 'success' ? 'rgba(16,185,129,0.15)' : 'rgba(239,68,68,0.15)',
+                color: pdfStates.cortes.feedback.type === 'success' ? 'var(--success-green)' : '#ef4444',
+                border: `1px solid ${pdfStates.cortes.feedback.type === 'success' ? 'var(--success-green)' : '#ef4444'}`,
+                width: '100%', textAlign: 'left'
+              }}>{pdfStates.cortes.feedback.msg}</div>
+            )}
+            {consumptionBreakdown.length === 0 ? (
+              <button disabled className="btn-outline" style={{ width: '100%', justifyContent: 'center', cursor: 'not-allowed', color: 'gray', borderColor: 'gray' }}>
+                Agrega áreas primero
+              </button>
+            ) : (
+              <button
+                onClick={generateCutDiagramPDF}
+                disabled={pdfStates.cortes.generating}
+                className="btn-outline"
+                style={{ width: '100%', justifyContent: 'center', borderColor: 'var(--accent-cyan)', color: 'var(--accent-cyan)' }}
+              >
+                <Scissors size={16} style={{ marginRight: '8px' }} />
+                {pdfStates.cortes.generating ? 'Generando...' : 'Generar Plano de Cortes'}
+              </button>
+            )}
+          </div>
+
+          {/* Reporte de Desperdicio */}
+          <div className="glass-card" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center',
+            opacity: consumptionBreakdown.length === 0 ? 0.5 : 1
+          }}>
+            <TrendingDown size={48} color="#fca5a5" style={{ marginBottom: '16px' }} />
+            <h3 style={{ marginBottom: '8px' }}>Reporte de Desperdicio</h3>
+            <p style={{ color: 'var(--text-muted)', fontSize: '14px', marginBottom: '24px' }}>Análisis de eficiencia y m² sobrantes del rollo por fila de corte. Útil para auditoría de consumo de material.</p>
+            {pdfStates.desperdicio.feedback && (
+              <div style={{ marginBottom: '12px', padding: '8px 12px', borderRadius: '8px', fontSize: '13px',
+                background: pdfStates.desperdicio.feedback.type === 'success' ? 'rgba(16,185,129,0.15)' : 'rgba(239,68,68,0.15)',
+                color: pdfStates.desperdicio.feedback.type === 'success' ? 'var(--success-green)' : '#ef4444',
+                border: `1px solid ${pdfStates.desperdicio.feedback.type === 'success' ? 'var(--success-green)' : '#ef4444'}`,
+                width: '100%', textAlign: 'left'
+              }}>{pdfStates.desperdicio.feedback.msg}</div>
+            )}
+            {consumptionBreakdown.length === 0 ? (
+              <button disabled className="btn-outline" style={{ width: '100%', justifyContent: 'center', cursor: 'not-allowed', color: 'gray', borderColor: 'gray' }}>
+                Agrega áreas primero
+              </button>
+            ) : (
+              <button
+                onClick={generateWasteReportPDF}
+                disabled={pdfStates.desperdicio.generating}
+                className="btn-outline"
+                style={{ width: '100%', justifyContent: 'center', borderColor: '#fca5a5', color: '#fca5a5' }}
+              >
+                <TrendingDown size={16} style={{ marginRight: '8px' }} />
+                {pdfStates.desperdicio.generating ? 'Generando...' : 'Generar Reporte de Desperdicio'}
               </button>
             )}
           </div>

@@ -30,6 +30,7 @@ class ExpenseCreate(BaseModel):
     description: str
     amount: float
     expense_type: str = "Variable"
+    category: Optional[str] = None
 
 class ProjectStatusUpdate(BaseModel):
     status: str
@@ -119,18 +120,17 @@ def get_dashboard(db: Session = Depends(get_db)):
     
     for p in projects:
         true_linear_meters, _, total_installed_area, total_material_area, _, _ = calculate_consumption(p.areas, p.roll_width)
-        income = true_linear_meters * p.price_per_ml
-<<<<<<< HEAD
+        base_income = true_linear_meters * p.price_per_ml
+        surcharges = sum(e.amount for e in p.expenses if not e.is_nullified and e.expense_type == "Recargo")
+        income = base_income + surcharges
         material_cost = true_linear_meters * p.base_cost_per_ml
-=======
-        material_cost = total_material_area * p.base_cost_per_sqm
->>>>>>> 40a974469c9148ed5df7c24d9624ca3be7e2ff39
         labor_cost = total_installed_area * p.labor_cost_per_sqm
-        
+        variable_expenses = sum(e.amount for e in p.expenses if not e.is_nullified and e.expense_type != "Recargo")
+
         if p.status == "Completado":
             total_m2 += total_installed_area
             total_revenue += income
-        
+
         project_list.append({
             "id": p.id,
             "name": p.name,
@@ -139,7 +139,7 @@ def get_dashboard(db: Session = Depends(get_db)):
             "status": p.status,
             "installation_date": p.installation_date,
             "total_area": round(total_installed_area, 2),
-            "net_profit": round(income - sum(e.amount for e in p.expenses if not e.is_nullified) - material_cost - labor_cost - p.module_cost, 2)
+            "net_profit": round(income - variable_expenses - material_cost - labor_cost - p.module_cost, 2)
         })
         
     return {
@@ -286,19 +286,16 @@ def get_project_detail(project_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Project not found")
     # Calculate detailed metrics with explicit bin packing
     true_linear_meters, rows, total_installed_area, total_material_area, waste_m2, efficiency = calculate_consumption(project.areas, project.roll_width)
-    total_income = true_linear_meters * project.price_per_ml
+    base_income = true_linear_meters * project.price_per_ml
+    surcharges = sum(e.amount for e in project.expenses if not e.is_nullified and e.expense_type == "Recargo")
+    total_income = base_income + surcharges
 
-<<<<<<< HEAD
     material_cost = true_linear_meters * project.base_cost_per_ml
-=======
-    # Calculate base material cost dynamically using total consumed area
-    material_cost = total_material_area * project.base_cost_per_sqm
->>>>>>> 40a974469c9148ed5df7c24d9624ca3be7e2ff39
     labor_cost = total_installed_area * project.labor_cost_per_sqm
-    
-    total_expenses = sum(e.amount for e in project.expenses if not e.is_nullified)
-    net_profit = total_income - total_expenses - material_cost - labor_cost - project.module_cost
-    
+
+    variable_expenses = sum(e.amount for e in project.expenses if not e.is_nullified and e.expense_type != "Recargo")
+    net_profit = total_income - variable_expenses - material_cost - labor_cost - project.module_cost
+
     return {
         "project": {
             "id": project.id,
@@ -318,7 +315,7 @@ def get_project_detail(project_id: int, db: Session = Depends(get_db)):
             "created_at": project.created_at
         },
         "areas": project.areas,
-        "expenses": [{"id": e.id, "description": e.description, "amount": e.amount, "expense_type": e.expense_type, "is_nullified": e.is_nullified} for e in project.expenses],
+        "expenses": [{"id": e.id, "description": e.description, "amount": e.amount, "expense_type": e.expense_type, "category": e.category, "is_nullified": e.is_nullified} for e in project.expenses],
         "photos": [{"id": p.id, "file_path": p.file_path} for p in project.photos],
         "consumption_breakdown": rows,
         "metrics": {
@@ -327,11 +324,13 @@ def get_project_detail(project_id: int, db: Session = Depends(get_db)):
             "waste_m2": round(waste_m2, 2),
             "efficiency_percentage": round(efficiency, 2),
             "linear_meters": round(true_linear_meters, 2),
+            "base_income": round(base_income, 2),
+            "surcharges": round(surcharges, 2),
             "total_income": round(total_income, 2),
             "material_cost": round(material_cost, 2),
             "labor_cost": round(labor_cost, 2),
-            "variable_expenses": round(total_expenses, 2),
-            "total_expenses": round(total_expenses + project.module_cost + material_cost + labor_cost, 2),
+            "variable_expenses": round(variable_expenses, 2),
+            "total_expenses": round(variable_expenses + project.module_cost + material_cost + labor_cost, 2),
             "net_profit": round(net_profit, 2)
         }
     }

@@ -49,6 +49,7 @@ export async function generateAndSavePDF({
   projectId = null,
   projectName = null,
   clientName = "Cliente",
+  pdfOptions = {},
   onStart,
   onSuccess,
   onError,
@@ -63,7 +64,8 @@ export async function generateAndSavePDF({
       filename: `${filename}.pdf`,
       image: { type: 'jpeg', quality: 0.98 },
       html2canvas: { scale: 2, useCORS: true },
-      jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+      jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' },
+      ...pdfOptions,
     };
 
     // Generar el PDF como Blob

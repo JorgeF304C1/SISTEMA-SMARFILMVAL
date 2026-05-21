@@ -59,11 +59,25 @@ def auto_backup(db_path, data_dir, keep=10):
         old.unlink()
 
 
+def ensure_schema(db_path):
+    """Aplica migraciones aditivas al DB del usuario (idempotente)."""
+    import sqlite3
+    conn = sqlite3.connect(db_path)
+    cur = conn.cursor()
+    cur.execute("PRAGMA table_info(project_expenses)")
+    cols = [r[1] for r in cur.fetchall()]
+    if "category" not in cols:
+        cur.execute("ALTER TABLE project_expenses ADD COLUMN category TEXT")
+        conn.commit()
+    conn.close()
+
+
 # ── Proteger el DB en ubicación externa al bundle ─────────────────────────────
 DB_PATH, APP_DATA_DIR = resolve_user_db_path()
 os.environ['SMARTFILM_DB_PATH'] = DB_PATH
 os.environ['SMARTFILM_DATA_DIR'] = str(APP_DATA_DIR)
 auto_backup(DB_PATH, APP_DATA_DIR)
+ensure_schema(DB_PATH)
 
 def get_free_port():
     import socket

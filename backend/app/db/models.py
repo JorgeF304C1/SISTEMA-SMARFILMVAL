@@ -8,11 +8,7 @@ class SystemSettings(Base):
     id = Column(Integer, primary_key=True, index=True)
     default_price_per_ml = Column(Float, default=200.0)
     default_roll_width = Column(Float, default=1.5)
-<<<<<<< HEAD
     default_base_cost_per_ml = Column(Float, default=110.0)
-=======
-    default_base_cost_per_sqm = Column(Float, default=70.0)
->>>>>>> 40a974469c9148ed5df7c24d9624ca3be7e2ff39
     default_labor_cost_per_sqm = Column(Float, default=15.0)
     delivery_note_warranty_months = Column(Integer, default=3)
 
@@ -60,11 +56,7 @@ class Project(Base):
     price_per_ml = Column(Float, default=200.0)
     roll_width = Column(Float, default=1.5)
     module_cost = Column(Float, default=0.0)
-<<<<<<< HEAD
     base_cost_per_ml = Column(Float, default=110.0)
-=======
-    base_cost_per_sqm = Column(Float, default=70.0)
->>>>>>> 40a974469c9148ed5df7c24d9624ca3be7e2ff39
     labor_cost_per_sqm = Column(Float, default=15.0)
     pricing_mode = Column(String, default="ml")
     installation_date = Column(String, nullable=True) # YYYY-MM-DD
@@ -97,11 +89,12 @@ class ProjectExpense(Base):
     project_id = Column(Integer, ForeignKey("projects.id"))
     description = Column(String)
     amount = Column(Float)
-    expense_type = Column(String, default="Variable")
+    expense_type = Column(String, default="Variable")  # "Variable" | "Recargo"
+    category = Column(String, nullable=True)
     is_nullified = Column(Boolean, default=False)
-    
+
     created_at = Column(DateTime(timezone=True), server_default=func.now())
-    
+
     project = relationship("Project", back_populates="expenses")
 
 class ProjectPhoto(Base):

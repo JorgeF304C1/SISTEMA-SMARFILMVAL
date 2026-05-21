@@ -30,6 +30,8 @@ DOC_TYPE_DIRS = {
     "express":       os.path.join(BASE_DOCS_DIR, "cotizador_express"),
     "cotizacion":    os.path.join(BASE_DOCS_DIR, "cotizaciones"),
     "nota_entrega":  os.path.join(BASE_DOCS_DIR, "notas_de_entrega"),
+    "cortes":        os.path.join(BASE_DOCS_DIR, "cortes"),
+    "desperdicio":   os.path.join(BASE_DOCS_DIR, "desperdicio"),
 }
 
 class GenerateDocRequest(BaseModel):
@@ -85,8 +87,12 @@ def generate_document(req: GenerateDocRequest):
         
         if req.doc_type == "cotizacion":
             filename = f"Cotizacion_{cliente}_{fecha}.pdf"
-        else:
+        elif req.doc_type == "nota_entrega":
             filename = f"NotaEntrega_{cliente}_{fecha}.pdf"
+        elif req.doc_type == "cortes":
+            filename = f"Cortes_{cliente}_{fecha}.pdf"
+        else:
+            filename = f"Desperdicio_{cliente}_{fecha}.pdf"
     
     # Crear carpeta si no existe
     os.makedirs(folder, exist_ok=True)
