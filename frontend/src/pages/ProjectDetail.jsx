@@ -370,6 +370,7 @@ export default function ProjectDetail({ user }) {
   };
 
   const generateCutDiagramPDF = async () => {
+    const blockTag = `Proyecto: ${project.name} · #${project.id}`;
     const rowsHtml = consumptionBreakdown.map((row, index) => {
       const piecesHtml = row.pieces.map(piece => {
         const widthPct = (piece.width / project.roll_width) * 100;
@@ -385,13 +386,14 @@ export default function ProjectDetail({ user }) {
       const freeHtml = freeWidth > 0.001
         ? `<div style="width:${freePct}%;height:100%;background:rgba(239,68,68,0.15);display:inline-block;vertical-align:top;"><div style="display:flex;align-items:center;justify-content:center;height:100%;font-size:10px;color:#cc0000;">Libre: ${freeWidth.toFixed(3)}m</div></div>`
         : '';
-      const pageBreak = index > 0 ? '<div style="page-break-before:always;"></div>' : '';
-      return `${pageBreak}
-        <div style="margin-bottom:20px;border:1px solid #ddd;border-radius:6px;padding:12px;">
+      const separator = index > 0 ? '<div style="border-top:2px dashed #bbb;margin:0 0 16px;text-align:right;color:#bbb;font-size:11px;">✂ - - - - - - - - - - - - - - - - - - - - - - - - - -</div>' : '';
+      return `${separator}
+        <div style="page-break-inside:avoid;margin-bottom:28px;border:1px solid #ddd;border-radius:6px;padding:12px;">
           <div style="display:flex;justify-content:space-between;margin-bottom:8px;">
             <strong style="color:#0070f3;">Fila ${index + 1} de ${consumptionBreakdown.length}</strong>
-            <span style="font-size:12px;color:#666;">Metro Lineal a Cortar: <strong>${row.max_height} m</strong></span>
+            <span style="font-size:11px;color:#888;">${blockTag}</span>
           </div>
+          <div style="font-size:12px;color:#666;margin-bottom:8px;">Metro Lineal a Cortar: <strong>${row.max_height} m</strong></div>
           <div style="width:100%;height:70px;background:#f9f9f9;border:1px solid #ddd;border-radius:4px;overflow:hidden;white-space:nowrap;">
             ${piecesHtml}${freeHtml}
           </div>
@@ -464,16 +466,54 @@ export default function ProjectDetail({ user }) {
   };
 
   const generateWasteReportPDF = async () => {
-    const rowsTableHtml = consumptionBreakdown.map((row, index) => {
+    const blockTag = `Proyecto: ${project.name} · #${project.id}`;
+    let blockIndex = 0;
+    const blocksHtml = consumptionBreakdown.map((row, r) => {
       const freeWidth = project.roll_width - row.current_width;
       const wasteSqm = row.max_height * Math.max(0, freeWidth);
-      return `<tr style="${index % 2 === 0 ? 'background:#f9f9f9;' : ''}">
-        <td style="padding:8px;border:1px solid #ddd;text-align:center;">${index + 1}</td>
-        <td style="padding:8px;border:1px solid #ddd;text-align:center;">${row.max_height} m</td>
-        <td style="padding:8px;border:1px solid #ddd;text-align:center;">${row.current_width.toFixed(3)} m</td>
-        <td style="padding:8px;border:1px solid #ddd;text-align:center;color:${freeWidth > 0.001 ? '#dc2626' : '#10b981'};">${Math.max(0, freeWidth).toFixed(3)} m</td>
-        <td style="padding:8px;border:1px solid #ddd;text-align:center;font-weight:bold;color:${wasteSqm > 0.01 ? '#dc2626' : '#10b981'};">${wasteSqm.toFixed(3)} m²</td>
-      </tr>`;
+
+      const laminasHtml = row.pieces.map(p => {
+        const pct = (p.width / project.roll_width) * 100;
+        const separator = blockIndex++ > 0 ? '<div style="border-top:2px dashed #bbb;margin:0 0 16px;text-align:right;color:#bbb;font-size:11px;">✂ - - - - - - - - - - - - - - - - - - - - - - - - - -</div>' : '';
+        return `${separator}
+          <div style="page-break-inside:avoid;border:1px solid #ddd;border-radius:6px;padding:12px;margin-bottom:28px;">
+            <div style="display:flex;justify-content:space-between;margin-bottom:8px;">
+              <strong style="color:#0070f3;">LÁMINA — ${p.original_area_name} (Fila ${r + 1})</strong>
+              <span style="font-size:11px;color:#888;">${blockTag}</span>
+            </div>
+            <div style="width:100%;height:70px;background:#f9f9f9;border:1px solid #ddd;border-radius:4px;overflow:hidden;white-space:nowrap;">
+              <div style="width:${pct}%;height:100%;background:rgba(14,165,233,0.25);display:inline-block;vertical-align:top;position:relative;">
+                <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:11px;text-align:center;padding:2px;">
+                  <strong>${p.original_area_name}</strong>
+                  <span>${p.width}m × ${p.height}m</span>
+                </div>
+              </div>
+            </div>
+            <p style="margin:8px 0 0;font-size:13px;"><strong>Lámina:</strong> ${p.width}m × ${p.height}m = ${(p.width * p.height).toFixed(3)} m²</p>
+          </div>`;
+      }).join('');
+
+      const sobranteHtml = freeWidth > 0.001 ? (() => {
+        const sep = blockIndex++ > 0 ? '<div style="border-top:2px dashed #bbb;margin:0 0 16px;text-align:right;color:#bbb;font-size:11px;">✂ - - - - - - - - - - - - - - - - - - - - - - - - - -</div>' : '';
+        const sobrPct = (freeWidth / project.roll_width) * 100;
+        return `${sep}
+          <div style="page-break-inside:avoid;border:1px solid #fca5a5;border-radius:6px;padding:12px;margin-bottom:28px;background:#fff8f8;">
+            <div style="display:flex;justify-content:space-between;margin-bottom:8px;">
+              <strong style="color:#dc2626;">SOBRANTE — Fila ${r + 1}</strong>
+              <span style="font-size:11px;color:#888;">${blockTag}</span>
+            </div>
+            <div style="width:100%;height:70px;background:#f9f9f9;border:1px solid #ddd;border-radius:4px;overflow:hidden;white-space:nowrap;">
+              <div style="width:${sobrPct}%;height:100%;background:rgba(239,68,68,0.18);display:inline-block;vertical-align:top;position:relative;">
+                <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:11px;color:#cc0000;text-align:center;">
+                  ${freeWidth.toFixed(3)}m × ${row.max_height}m
+                </div>
+              </div>
+            </div>
+            <p style="margin:8px 0 0;font-size:13px;color:#dc2626;"><strong>Sobrante:</strong> ${freeWidth.toFixed(3)}m × ${row.max_height}m = ${wasteSqm.toFixed(3)} m²</p>
+          </div>`;
+      })() : '';
+
+      return laminasHtml + sobranteHtml;
     }).join('');
 
     const element = document.createElement('div');
@@ -510,21 +550,11 @@ export default function ProjectDetail({ user }) {
           El material libre al final de cada fila no puede utilizarse sin generar cortes adicionales.
         </p>
 
-        <h3 style="margin-bottom:12px;">Desglose por Fila de Corte</h3>
-        <table style="width:100%;border-collapse:collapse;font-size:13px;">
-          <tr style="background:#0070f3;color:white;">
-            <th style="padding:10px;border:1px solid #ddd;">Fila</th>
-            <th style="padding:10px;border:1px solid #ddd;">Altura (ml)</th>
-            <th style="padding:10px;border:1px solid #ddd;">Ancho Usado</th>
-            <th style="padding:10px;border:1px solid #ddd;">Ancho Libre</th>
-            <th style="padding:10px;border:1px solid #ddd;">m² Desperdicio</th>
-          </tr>
-          ${rowsTableHtml}
-          <tr style="background:#fee2e2;font-weight:bold;">
-            <td colspan="4" style="padding:10px;border:1px solid #ddd;text-align:right;">TOTAL DESPERDICIADO:</td>
-            <td style="padding:10px;border:1px solid #ddd;text-align:center;color:#dc2626;">${metrics.waste_m2} m²</td>
-          </tr>
-        </table>
+        <h3 style="margin-bottom:16px;">Etiquetas de Corte — recortar por la línea punteada</h3>
+        ${blocksHtml}
+        <div style="border-top:1px solid #ddd;padding-top:12px;margin-top:8px;font-size:13px;font-weight:bold;color:#dc2626;text-align:right;">
+          TOTAL DESPERDICIADO: ${metrics.waste_m2} m²
+        </div>
 
         <div style="margin-top:32px;text-align:center;font-size:11px;color:#999;border-top:1px solid #ddd;padding-top:16px;">
           <p>Smart Film Valencia · Reporte generado automáticamente por el sistema de gestión</p>
@@ -539,6 +569,7 @@ export default function ProjectDetail({ user }) {
       projectId: project.id,
       projectName: project.name,
       clientName: project.client_name,
+      pdfOptions: { pagebreak: { mode: ['avoid-all', 'css'] } },
       onStart: () => setPdfState('desperdicio', { generating: true, feedback: null }),
       onSuccess: (result) => {
         setPdfState('desperdicio', { generating: false, feedback: { type: 'success', msg: `✅ Guardado: ${result.filename}` } });
