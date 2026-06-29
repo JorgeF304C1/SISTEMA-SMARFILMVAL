@@ -31,6 +31,7 @@ class ExpenseCreate(BaseModel):
     amount: float
     expense_type: str = "Variable"
     category: Optional[str] = None
+    quantity: int = 1
 
 class ProjectStatusUpdate(BaseModel):
     status: str
@@ -121,11 +122,11 @@ def get_dashboard(db: Session = Depends(get_db)):
     for p in projects:
         true_linear_meters, _, total_installed_area, total_material_area, _, _ = calculate_consumption(p.areas, p.roll_width)
         base_income = true_linear_meters * p.price_per_ml
-        surcharges = sum(e.amount for e in p.expenses if not e.is_nullified and e.expense_type == "Recargo")
+        surcharges = sum(e.amount * (e.quantity or 1) for e in p.expenses if not e.is_nullified and e.expense_type == "Recargo")
         income = base_income + surcharges
         material_cost = true_linear_meters * p.base_cost_per_ml
         labor_cost = total_installed_area * p.labor_cost_per_sqm
-        variable_expenses = sum(e.amount for e in p.expenses if not e.is_nullified and e.expense_type != "Recargo")
+        variable_expenses = sum(e.amount * (e.quantity or 1) for e in p.expenses if not e.is_nullified and e.expense_type != "Recargo")
 
         if p.status == "Completado":
             total_m2 += total_installed_area
@@ -287,13 +288,13 @@ def get_project_detail(project_id: int, db: Session = Depends(get_db)):
     # Calculate detailed metrics with explicit bin packing
     true_linear_meters, rows, total_installed_area, total_material_area, waste_m2, efficiency = calculate_consumption(project.areas, project.roll_width)
     base_income = true_linear_meters * project.price_per_ml
-    surcharges = sum(e.amount for e in project.expenses if not e.is_nullified and e.expense_type == "Recargo")
+    surcharges = sum(e.amount * (e.quantity or 1) for e in project.expenses if not e.is_nullified and e.expense_type == "Recargo")
     total_income = base_income + surcharges
 
     material_cost = true_linear_meters * project.base_cost_per_ml
     labor_cost = total_installed_area * project.labor_cost_per_sqm
 
-    variable_expenses = sum(e.amount for e in project.expenses if not e.is_nullified and e.expense_type != "Recargo")
+    variable_expenses = sum(e.amount * (e.quantity or 1) for e in project.expenses if not e.is_nullified and e.expense_type != "Recargo")
     net_profit = total_income - variable_expenses - material_cost - labor_cost - project.module_cost
 
     return {

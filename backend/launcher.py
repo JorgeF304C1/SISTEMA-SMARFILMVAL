@@ -68,7 +68,9 @@ def ensure_schema(db_path):
     cols = [r[1] for r in cur.fetchall()]
     if "category" not in cols:
         cur.execute("ALTER TABLE project_expenses ADD COLUMN category TEXT")
-        conn.commit()
+    if "quantity" not in cols:
+        cur.execute("ALTER TABLE project_expenses ADD COLUMN quantity INTEGER DEFAULT 1")
+    conn.commit()
     conn.close()
 
 

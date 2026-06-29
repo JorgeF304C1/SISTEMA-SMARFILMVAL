@@ -21,7 +21,7 @@ export default function ProjectDetail({ user }) {
   const fileInputRef = useRef(null);
   
   const [newArea, setNewArea] = useState({ name: '', width: '', height: '' });
-  const [newExpense, setNewExpense] = useState({ description: '', amount: '', expense_type: 'Variable', category: '' });
+  const [newExpense, setNewExpense] = useState({ description: '', amount: '', expense_type: 'Variable', category: '', quantity: 1 });
   const [isEditingPrice, setIsEditingPrice] = useState(false);
   const [tempPrice, setTempPrice] = useState("");
   const [isEditingRollWidth, setIsEditingRollWidth] = useState(false);
@@ -146,9 +146,11 @@ export default function ProjectDetail({ user }) {
     e.preventDefault();
     try {
       await axios.post(`${API_URL}/projects/${id}/expenses`, {
-        ...newExpense, amount: parseFloat(newExpense.amount)
+        ...newExpense,
+        amount: parseFloat(newExpense.amount),
+        quantity: newExpense.expense_type === 'Recargo' ? (parseInt(newExpense.quantity) || 1) : 1,
       });
-      setNewExpense({ description: '', amount: '', expense_type: 'Variable' });
+      setNewExpense({ description: '', amount: '', expense_type: 'Variable', category: '', quantity: 1 });
       loadData();
     } catch (err) { console.error(err); }
   };
@@ -257,13 +259,17 @@ export default function ProjectDetail({ user }) {
             <td style="padding: 10px; border: 1px solid #ddd; text-align: right;">$${project.price_per_ml}</td>
             <td style="padding: 10px; border: 1px solid #ddd; text-align: right;"><strong>$${metrics.base_income}</strong></td>
           </tr>
-          ${expenses.filter(e => e.expense_type === 'Recargo' && !e.is_nullified).map(e => `
+          ${expenses.filter(e => e.expense_type === 'Recargo' && !e.is_nullified).map(e => {
+            const qty = e.quantity || 1;
+            const total = (e.amount * qty).toFixed(2);
+            return `
           <tr>
             <td style="padding: 10px; border: 1px solid #ddd;">${e.description}${e.category ? ` <span style="color:#666;font-size:12px;">(${e.category})</span>` : ''}</td>
-            <td style="padding: 10px; border: 1px solid #ddd; text-align: center; color:#666;">—</td>
-            <td style="padding: 10px; border: 1px solid #ddd; text-align: right; color:#666;">—</td>
-            <td style="padding: 10px; border: 1px solid #ddd; text-align: right;"><strong>$${e.amount}</strong></td>
-          </tr>`).join('')}
+            <td style="padding: 10px; border: 1px solid #ddd; text-align: center; color:#666;">${qty > 1 ? `×${qty}` : '—'}</td>
+            <td style="padding: 10px; border: 1px solid #ddd; text-align: right; color:#666;">${qty > 1 ? `$${e.amount}` : '—'}</td>
+            <td style="padding: 10px; border: 1px solid #ddd; text-align: right;"><strong>$${total}</strong></td>
+          </tr>`;
+          }).join('')}
           <tr style="background: #f0f7ff;">
             <td colspan="3" style="padding: 12px; border: 1px solid #ddd; text-align: right; font-weight: bold; font-size: 15px;">TOTAL</td>
             <td style="padding: 12px; border: 1px solid #ddd; text-align: right; font-size: 20px; color: #0070f3;"><strong>$${metrics.total_income}</strong></td>
@@ -325,13 +331,17 @@ export default function ProjectDetail({ user }) {
             <td style="padding: 10px; border: 1px solid #ddd; text-align: right;">$${project.price_per_ml}</td>
             <td style="padding: 10px; border: 1px solid #ddd; text-align: right;"><strong>$${metrics.base_income}</strong></td>
           </tr>
-          ${expenses.filter(e => e.expense_type === 'Recargo' && !e.is_nullified).map(e => `
+          ${expenses.filter(e => e.expense_type === 'Recargo' && !e.is_nullified).map(e => {
+            const qty = e.quantity || 1;
+            const total = (e.amount * qty).toFixed(2);
+            return `
           <tr>
             <td style="padding: 10px; border: 1px solid #ddd;">${e.description}${e.category ? ` <span style="color:#666;font-size:12px;">(${e.category})</span>` : ''}</td>
-            <td style="padding: 10px; border: 1px solid #ddd; text-align: center; color:#666;">—</td>
-            <td style="padding: 10px; border: 1px solid #ddd; text-align: right; color:#666;">—</td>
-            <td style="padding: 10px; border: 1px solid #ddd; text-align: right;"><strong>$${e.amount}</strong></td>
-          </tr>`).join('')}
+            <td style="padding: 10px; border: 1px solid #ddd; text-align: center; color:#666;">${qty > 1 ? `×${qty}` : '—'}</td>
+            <td style="padding: 10px; border: 1px solid #ddd; text-align: right; color:#666;">${qty > 1 ? `$${e.amount}` : '—'}</td>
+            <td style="padding: 10px; border: 1px solid #ddd; text-align: right;"><strong>$${total}</strong></td>
+          </tr>`;
+          }).join('')}
           <tr style="background: #f0f7ff;">
             <td colspan="3" style="padding: 12px; border: 1px solid #ddd; text-align: right; font-weight: bold; font-size: 15px;">TOTAL</td>
             <td style="padding: 12px; border: 1px solid #ddd; text-align: right; font-size: 20px; color: #0070f3;"><strong>$${metrics.total_income}</strong></td>
@@ -863,7 +873,7 @@ export default function ProjectDetail({ user }) {
             <h3 style={{ marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}><DollarSign size={20} /> Registrar Gasto</h3>
             <div style={{ marginBottom: '16px' }}>
               <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', color: 'var(--text-muted)' }}>Tipo de Gasto</label>
-              <select value={newExpense.expense_type} onChange={e => setNewExpense({...newExpense, expense_type: e.target.value})} style={{ width: '100%', padding: '10px', borderRadius: '6px', background: 'rgba(0,0,0,0.5)', border: '1px solid rgba(255,255,255,0.1)', color: 'white', appearance: 'none' }}>
+              <select value={newExpense.expense_type} onChange={e => setNewExpense({...newExpense, expense_type: e.target.value, quantity: 1})} style={{ width: '100%', padding: '10px', borderRadius: '6px', background: 'rgba(0,0,0,0.5)', border: '1px solid rgba(255,255,255,0.1)', color: 'white', appearance: 'none' }}>
                 <option value="Variable">Variable (saca de ganancia)</option>
                 <option value="Recargo">Recargo (cobrar al cliente)</option>
               </select>
@@ -880,9 +890,20 @@ export default function ProjectDetail({ user }) {
               <input type="text" value={newExpense.category} onChange={e => setNewExpense({...newExpense, category: e.target.value})} placeholder="Ej. Estructura, Materiales, Transporte" />
             </div>
             <div style={{ marginBottom: '16px' }}>
-              <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', color: 'var(--text-muted)' }}>Monto ($)</label>
+              <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', color: 'var(--text-muted)' }}>Monto ($) {newExpense.expense_type === 'Recargo' && <span style={{ color: 'var(--text-muted)', fontWeight: 'normal' }}>(precio unitario)</span>}</label>
               <input type="number" step="0.01" required value={newExpense.amount} onChange={e => setNewExpense({...newExpense, amount: e.target.value})} />
             </div>
+            {newExpense.expense_type === 'Recargo' && (
+              <div style={{ marginBottom: '16px' }}>
+                <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', color: 'var(--text-muted)' }}>Cantidad</label>
+                <input type="number" min="1" step="1" value={newExpense.quantity} onChange={e => setNewExpense({...newExpense, quantity: parseInt(e.target.value) || 1})} />
+                {newExpense.amount && newExpense.quantity > 1 && (
+                  <p style={{ marginTop: '6px', fontSize: '12px', color: 'var(--accent-cyan)' }}>
+                    Total: ${(parseFloat(newExpense.amount) * newExpense.quantity).toFixed(2)}
+                  </p>
+                )}
+              </div>
+            )}
             <button type="submit" className="btn-primary" style={{ width: '100%', justifyContent: 'center' }}>+ Guardar Gasto</button>
           </form>
 
@@ -902,6 +923,7 @@ export default function ProjectDetail({ user }) {
                   <tr key={e.id || i} style={{ borderBottom: '1px solid rgba(255,255,255,0.05)', opacity: e.is_nullified ? 0.5 : 1 }}>
                     <td style={{ padding: '12px' }}>
                       {e.is_nullified ? <s>{e.description} (Anulado)</s> : e.description}
+                      {(e.quantity || 1) > 1 && !e.is_nullified && <span style={{ display: 'block', fontSize: '11px', color: 'var(--accent-cyan)' }}>×{e.quantity} unidades</span>}
                       {e.category && !e.is_nullified && <span style={{ display: 'block', fontSize: '11px', color: 'var(--text-muted)' }}>{e.category}</span>}
                     </td>
                     <td style={{ padding: '12px' }}>
@@ -914,7 +936,13 @@ export default function ProjectDetail({ user }) {
                       </span>
                     </td>
                     <td style={{ padding: '12px', fontWeight: 600, color: e.is_nullified ? 'var(--text-muted)' : (e.expense_type === 'Recargo' ? 'var(--accent-cyan)' : '#fca5a5') }}>
-                      {e.is_nullified ? <s>{e.expense_type === 'Recargo' ? '+' : '-'}${e.amount}</s> : `${e.expense_type === 'Recargo' ? '+' : '-'}$${e.amount}`}
+                      {(() => {
+                        const qty = e.quantity || 1;
+                        const total = (e.amount * qty).toFixed(2);
+                        const sign = e.expense_type === 'Recargo' ? '+' : '-';
+                        const display = qty > 1 ? `${sign}$${total} ($${e.amount}×${qty})` : `${sign}$${e.amount}`;
+                        return e.is_nullified ? <s>{display}</s> : display;
+                      })()}
                     </td>
                     <td style={{ padding: '12px', textAlign: 'right' }}>
                       <button

@@ -91,11 +91,19 @@ class ProjectExpense(Base):
     amount = Column(Float)
     expense_type = Column(String, default="Variable")  # "Variable" | "Recargo"
     category = Column(String, nullable=True)
+    quantity = Column(Integer, default=1)
     is_nullified = Column(Boolean, default=False)
 
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
     project = relationship("Project", back_populates="expenses")
+
+class InventoryItem(Base):
+    __tablename__ = "inventory_items"
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String, nullable=False)
+    current_quantity = Column(Float, default=0.0)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
 
 class ProjectPhoto(Base):
     __tablename__ = "project_photos"
