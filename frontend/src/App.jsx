@@ -8,10 +8,11 @@ import ProjectDetail from './pages/ProjectDetail';
 import SettingsPage from './pages/Settings';
 import Login from './pages/Login';
 import InventoryPage from './pages/InventoryPage';
+import MovementsPage from './pages/MovementsPage';
 import UsersPage from './pages/UsersPage';
 import ProjectsPage from './pages/ProjectsPage';
 import CalendarPage from './pages/CalendarPage';
-import { Package, Calendar as CalendarIcon } from 'lucide-react';
+import { Package, Calendar as CalendarIcon, History } from 'lucide-react';
 import { generateAndSavePDF } from './utils/pdfUtils';
 
 const API_URL = "/api/v1/system/network";
@@ -163,6 +164,9 @@ function App() {
               <Link to="/inventory" className="btn-outline" style={{ display: 'flex', alignItems: 'center', gap: '12px', textDecoration: 'none', border: 'none', justifyContent: 'flex-start' }}>
                 <Package size={20} /> Bodega e Inventario
               </Link>
+              <Link to="/inventory/movements" className="btn-outline" style={{ display: 'flex', alignItems: 'center', gap: '12px', textDecoration: 'none', border: 'none', justifyContent: 'flex-start' }}>
+                <History size={20} /> Movimientos
+              </Link>
               <Link to="/users" className="btn-outline" style={{ display: 'flex', alignItems: 'center', gap: '12px', textDecoration: 'none', border: 'none', justifyContent: 'flex-start' }}>
                 <Shield size={20} /> Control de Usuarios
               </Link>
@@ -184,6 +188,7 @@ function App() {
           <Route path="/" element={<Dashboard />} />
           <Route path="/calendar" element={<CalendarPage />} />
           <Route path="/inventory" element={<InventoryPage />} />
+          <Route path="/inventory/movements" element={<MovementsPage />} />
           <Route path="/users" element={<UsersPage />} />
           <Route path="/projects/list" element={<ProjectsPage />} />
           <Route path="/projects/new" element={<NewProject />} />

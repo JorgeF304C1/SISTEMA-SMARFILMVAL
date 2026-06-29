@@ -105,6 +105,19 @@ class InventoryItem(Base):
     current_quantity = Column(Float, default=0.0)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
+class InventoryMovement(Base):
+    __tablename__ = "inventory_movements"
+    id = Column(Integer, primary_key=True, index=True)
+    movement_type = Column(String)               # "cargo" | "descargo"
+    source_type = Column(String)                 # "bobina" | "item"
+    source_id = Column(Integer, nullable=True)
+    source_name = Column(String)
+    quantity = Column(Float)
+    unit = Column(String, default="u")           # "m" para bobina, "u" para item
+    note = Column(String, nullable=True)
+    username = Column(String, nullable=True)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+
 class ProjectPhoto(Base):
     __tablename__ = "project_photos"
     id = Column(Integer, primary_key=True, index=True)

@@ -8,6 +8,8 @@ import uuid
 import math
 from app.db.database import get_db
 from app.db import models
+from app.api.auth import get_current_user
+from app.api.inventory import log_movement
 
 router = APIRouter(prefix="/projects", tags=["Projects"])
 
@@ -186,24 +188,25 @@ def create_project(project: ProjectCreate, db: Session = Depends(get_db)):
     return db_project
 
 @router.put("/{project_id}/status")
-def update_project_status(project_id: int, status_update: ProjectStatusUpdate, db: Session = Depends(get_db)):
+def update_project_status(project_id: int, status_update: ProjectStatusUpdate, db: Session = Depends(get_db), current_user: models.User = Depends(get_current_user)):
     project = db.query(models.Project).filter(models.Project.id == project_id).first()
     if not project:
         raise HTTPException(status_code=404, detail="Project not found")
     if project.status != "Completado" and status_update.status == "Completado":
         # Automatically deduct inventory
         linear_meters, _, _, _, _, _ = calculate_consumption(project.areas, project.roll_width)
-        
+
         if linear_meters > 0:
             active_rolls = db.query(models.RollInventory).filter(
                 models.RollInventory.status == "Activo",
                 models.RollInventory.roll_width == project.roll_width
             ).order_by(models.RollInventory.id.asc()).all()
-            
+
             remaining_to_deduct = linear_meters
             for roll in active_rolls:
                 if remaining_to_deduct <= 0:
                     break
+                deducted = min(remaining_to_deduct, roll.current_meters)
                 if roll.current_meters >= remaining_to_deduct:
                     roll.current_meters -= remaining_to_deduct
                     remaining_to_deduct = 0
@@ -211,6 +214,12 @@ def update_project_status(project_id: int, status_update: ProjectStatusUpdate, d
                     remaining_to_deduct -= roll.current_meters
                     roll.current_meters = 0
                     roll.status = "Agotado"
+                if deducted > 0:
+                    log_movement(db, movement_type="descargo", source_type="bobina",
+                                 source_id=roll.id, source_name=roll.name,
+                                 quantity=round(deducted, 4), unit="m",
+                                 note=f"Proyecto #{project.id} - {project.name}",
+                                 username=current_user.username)
 
     project.status = status_update.status
     if status_update.approved_date is not None:

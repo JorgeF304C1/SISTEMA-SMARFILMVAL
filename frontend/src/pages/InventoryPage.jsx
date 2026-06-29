@@ -61,8 +61,9 @@ export default function InventoryPage() {
   const [showItemModal, setShowItemModal] = useState(false);
   const [newItem, setNewItem] = useState({ name: '', initial_quantity: 0 });
   const [itemError, setItemError] = useState('');
-  const [adjustModal, setAdjustModal] = useState(null); // { item, mode: 'cargar'|'descargar' }
+  const [adjustModal, setAdjustModal] = useState(null); // { kind: 'bobina'|'item', target, mode: 'cargar'|'descargar' }
   const [adjustQty, setAdjustQty] = useState('');
+  const [adjustNote, setAdjustNote] = useState('');
 
   const fetchItems = async () => {
     try {
@@ -98,12 +99,17 @@ export default function InventoryPage() {
     const qty = parseFloat(adjustQty);
     if (!qty || qty <= 0) return;
     try {
-      await axios.put(`${API_URL}/items/${adjustModal.item.id}/${adjustModal.mode}`, { quantity: qty });
+      const { kind, target, mode } = adjustModal;
+      const endpoint = kind === 'bobina'
+        ? `${API_URL}/${target.id}/${mode}`
+        : `${API_URL}/items/${target.id}/${mode}`;
+      await axios.put(endpoint, { quantity: qty, note: adjustNote || null });
       setAdjustModal(null);
       setAdjustQty('');
-      fetchItems();
+      setAdjustNote('');
+      if (kind === 'bobina') loadInventory(); else fetchItems();
     } catch (err) {
-      alert(err.response?.data?.detail || "Error al ajustar el ítem");
+      alert(err.response?.data?.detail || "Error al ajustar");
     }
   };
 
@@ -172,10 +178,20 @@ export default function InventoryPage() {
                       }}>{roll.status}</span>
                     </td>
                     {isAdmin && (
-                      <td style={{ padding: '16px', textAlign: 'right' }}>
-                        <button onClick={() => handleDelete(roll.id)} className="btn-outline" style={{ padding: '6px 12px', color: '#fca5a5', borderColor: 'transparent' }}>
-                          <Trash2 size={16} />
-                        </button>
+                      <td style={{ padding: '16px' }}>
+                        <div style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end' }}>
+                          <button className="btn-outline" style={{ color: '#10b981', borderColor: '#10b981', display: 'flex', alignItems: 'center', gap: '4px', padding: '6px 12px' }}
+                            onClick={() => { setAdjustModal({ kind: 'bobina', target: roll, mode: 'cargar' }); setAdjustQty(''); setAdjustNote(''); }}>
+                            <ArrowUp size={14} /> Cargar
+                          </button>
+                          <button className="btn-outline" style={{ color: '#f59e0b', borderColor: '#f59e0b', display: 'flex', alignItems: 'center', gap: '4px', padding: '6px 12px' }}
+                            onClick={() => { setAdjustModal({ kind: 'bobina', target: roll, mode: 'descargar' }); setAdjustQty(''); setAdjustNote(''); }}>
+                            <ArrowDown size={14} /> Descargar
+                          </button>
+                          <button onClick={() => handleDelete(roll.id)} className="btn-outline" style={{ padding: '6px 12px', color: '#fca5a5', borderColor: 'transparent' }}>
+                            <Trash2 size={16} />
+                          </button>
+                        </div>
                       </td>
                     )}
                   </tr>
@@ -221,11 +237,11 @@ export default function InventoryPage() {
                     <td style={{ padding: '16px', textAlign: 'center' }}>
                       <div style={{ display: 'flex', gap: '8px', justifyContent: 'center' }}>
                         <button className="btn-outline" style={{ color: '#10b981', borderColor: '#10b981', display: 'flex', alignItems: 'center', gap: '4px', padding: '6px 14px' }}
-                          onClick={() => { setAdjustModal({ item, mode: 'cargar' }); setAdjustQty(''); }}>
+                          onClick={() => { setAdjustModal({ kind: 'item', target: item, mode: 'cargar' }); setAdjustQty(''); setAdjustNote(''); }}>
                           <ArrowUp size={14} /> Cargar
                         </button>
                         <button className="btn-outline" style={{ color: '#f59e0b', borderColor: '#f59e0b', display: 'flex', alignItems: 'center', gap: '4px', padding: '6px 14px' }}
-                          onClick={() => { setAdjustModal({ item, mode: 'descargar' }); setAdjustQty(''); }}>
+                          onClick={() => { setAdjustModal({ kind: 'item', target: item, mode: 'descargar' }); setAdjustQty(''); setAdjustNote(''); }}>
                           <ArrowDown size={14} /> Descargar
                         </button>
                         <button className="btn-outline" style={{ color: '#fca5a5', borderColor: 'transparent', padding: '6px 12px' }}
@@ -295,35 +311,52 @@ export default function InventoryPage() {
       )}
 
       {/* ── Modal Cargar / Descargar ── */}
-      {adjustModal && (
-        <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.8)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 100 }}>
-          <div className="glass-card animate-fade-in" style={{ width: '360px', padding: '32px' }}>
-            <h2 style={{ marginBottom: '8px' }}>
-              {adjustModal.mode === 'cargar' ? '+ Cargar' : '− Descargar'}: {adjustModal.item.name}
-            </h2>
-            <p style={{ color: 'var(--text-muted)', marginTop: 0, marginBottom: '24px' }}>
-              Stock actual: <strong style={{ color: 'white' }}>{adjustModal.item.current_quantity % 1 === 0 ? adjustModal.item.current_quantity : adjustModal.item.current_quantity.toFixed(2)}</strong>
-            </p>
-            <div style={{ marginBottom: '28px' }}>
-              <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', color: 'var(--text-muted)' }}>
-                Cantidad a {adjustModal.mode === 'cargar' ? 'agregar' : 'restar'}
-              </label>
-              <input
-                type="number" min="0.01" step="1" autoFocus
-                value={adjustQty} onChange={e => setAdjustQty(e.target.value)}
-                onKeyDown={e => e.key === 'Enter' && handleAdjust()}
-                style={inputStyle}
-              />
-            </div>
-            <div style={{ display: 'flex', gap: '16px', justifyContent: 'flex-end' }}>
-              <button className="btn-outline" onClick={() => setAdjustModal(null)}>Cancelar</button>
-              <button className="btn-primary" onClick={handleAdjust} disabled={!adjustQty || parseFloat(adjustQty) <= 0}>
-                Confirmar
-              </button>
+      {adjustModal && (() => {
+        const { kind, target, mode } = adjustModal;
+        const stockLabel = kind === 'bobina'
+          ? `${target.current_meters.toFixed(2)} m`
+          : (target.current_quantity % 1 === 0 ? target.current_quantity : target.current_quantity.toFixed(2));
+        const unit = kind === 'bobina' ? 'm' : 'u';
+        return (
+          <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.8)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 100 }}>
+            <div className="glass-card animate-fade-in" style={{ width: '400px', padding: '32px' }}>
+              <h2 style={{ marginBottom: '8px' }}>
+                {mode === 'cargar' ? '+ Cargar' : '− Descargar'}: {target.name}
+              </h2>
+              <p style={{ color: 'var(--text-muted)', marginTop: 0, marginBottom: '20px' }}>
+                Stock actual: <strong style={{ color: 'white' }}>{stockLabel}</strong>{kind === 'bobina' && ` / ${target.total_meters} m`}
+              </p>
+              <div style={{ marginBottom: '16px' }}>
+                <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', color: 'var(--text-muted)' }}>
+                  Cantidad a {mode === 'cargar' ? 'agregar' : 'restar'} ({unit})
+                </label>
+                <input
+                  type="number" min="0.01" step={kind === 'bobina' ? '0.1' : '1'} autoFocus
+                  value={adjustQty} onChange={e => setAdjustQty(e.target.value)}
+                  onKeyDown={e => e.key === 'Enter' && handleAdjust()}
+                  style={inputStyle}
+                />
+              </div>
+              <div style={{ marginBottom: '24px' }}>
+                <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', color: 'var(--text-muted)' }}>
+                  Nota <span style={{ fontWeight: 'normal' }}>(opcional)</span>
+                </label>
+                <input
+                  type="text" placeholder="Ej. Corte manual, Daño, Devolución..."
+                  value={adjustNote} onChange={e => setAdjustNote(e.target.value)}
+                  style={inputStyle}
+                />
+              </div>
+              <div style={{ display: 'flex', gap: '16px', justifyContent: 'flex-end' }}>
+                <button className="btn-outline" onClick={() => setAdjustModal(null)}>Cancelar</button>
+                <button className="btn-primary" onClick={handleAdjust} disabled={!adjustQty || parseFloat(adjustQty) <= 0}>
+                  Confirmar
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-      )}
+        );
+      })()}
     </div>
   );
 }
