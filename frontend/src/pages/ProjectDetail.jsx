@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { ArrowLeft, Box, DollarSign, FileDown, Plus, Trash2, Camera, Upload, Scissors, TrendingDown } from 'lucide-react';
+import { ArrowLeft, Box, DollarSign, FileDown, Plus, Trash2, Camera, Upload, Scissors, TrendingDown, Pencil, Check, X } from 'lucide-react';
 import { generateAndSavePDF } from '../utils/pdfUtils';
 
 const API_URL = "/api/v1";
@@ -32,6 +32,10 @@ export default function ProjectDetail({ user }) {
   const [tempLaborCost, setTempLaborCost] = useState("");
   const [isEditingInstDate, setIsEditingInstDate] = useState(false);
   const [tempInstDate, setTempInstDate] = useState("");
+  const [isEditingName, setIsEditingName] = useState(false);
+  const [tempName, setTempName] = useState("");
+  const [isEditingClient, setIsEditingClient] = useState(false);
+  const [tempClient, setTempClient] = useState("");
   const [pdfStates, setPdfStates] = useState({
     cotizacion: { generating: false, feedback: null },
     nota_entrega: { generating: false, feedback: null },
@@ -200,6 +204,24 @@ export default function ProjectDetail({ user }) {
       setIsEditingInstDate(false);
       loadData();
     } catch (err) { console.error("Error updating installation date", err); }
+  };
+
+  const handleUpdateName = async () => {
+    const name = tempName.trim();
+    if (!name) { setIsEditingName(false); return; }
+    try {
+      await axios.put(`${API_URL}/projects/${id}/details`, { name });
+      setIsEditingName(false);
+      loadData();
+    } catch (err) { console.error("Error updating name", err); }
+  };
+
+  const handleUpdateClient = async () => {
+    try {
+      await axios.put(`${API_URL}/projects/${id}/details`, { client_name: tempClient.trim() });
+      setIsEditingClient(false);
+      loadData();
+    } catch (err) { console.error("Error updating client", err); }
   };
 
   const handlePhotoUpload = async (e) => {
@@ -597,10 +619,43 @@ export default function ProjectDetail({ user }) {
       {/* Header */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '24px' }}>
         <button className="btn-outline" onClick={() => navigate(-1)} style={{ padding: '8px 12px' }}><ArrowLeft size={20} /></button>
-        <div>
-          <h1 style={{ fontSize: '28px' }}>{project.name}</h1>
+        <div style={{ flex: 1 }}>
+          {isEditingName ? (
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+              <input
+                autoFocus type="text" value={tempName}
+                onChange={e => setTempName(e.target.value)}
+                onKeyDown={e => { if (e.key === 'Enter') handleUpdateName(); if (e.key === 'Escape') setIsEditingName(false); }}
+                style={{ fontSize: '24px', fontWeight: 'bold', padding: '4px 10px', borderRadius: '6px', background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.2)', color: 'white', minWidth: '300px' }}
+              />
+              <button className="btn-outline" onClick={handleUpdateName} style={{ padding: '6px 10px', color: 'var(--success-green)', borderColor: 'transparent' }}><Check size={18} /></button>
+              <button className="btn-outline" onClick={() => setIsEditingName(false)} style={{ padding: '6px 10px', color: '#fca5a5', borderColor: 'transparent' }}><X size={18} /></button>
+            </div>
+          ) : (
+            <h1 style={{ fontSize: '28px', display: 'flex', alignItems: 'center', gap: '10px' }}>
+              {project.name}
+              <button className="btn-outline" onClick={() => { setTempName(project.name); setIsEditingName(true); }} title="Editar nombre del proyecto" style={{ padding: '4px 8px', color: 'var(--text-muted)', borderColor: 'transparent' }}><Pencil size={16} /></button>
+            </h1>
+          )}
           <div style={{ color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: '16px' }}>
-            <div>Cliente: {project.client_name}</div>
+            {isEditingClient ? (
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <span>Cliente:</span>
+                <input
+                  autoFocus type="text" value={tempClient}
+                  onChange={e => setTempClient(e.target.value)}
+                  onKeyDown={e => { if (e.key === 'Enter') handleUpdateClient(); if (e.key === 'Escape') setIsEditingClient(false); }}
+                  style={{ padding: '3px 8px', borderRadius: '6px', background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.2)', color: 'white' }}
+                />
+                <button className="btn-outline" onClick={handleUpdateClient} style={{ padding: '4px 8px', color: 'var(--success-green)', borderColor: 'transparent' }}><Check size={16} /></button>
+                <button className="btn-outline" onClick={() => setIsEditingClient(false)} style={{ padding: '4px 8px', color: '#fca5a5', borderColor: 'transparent' }}><X size={16} /></button>
+              </div>
+            ) : (
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                Cliente: {project.client_name}
+                <button className="btn-outline" onClick={() => { setTempClient(project.client_name === 'Sin Cliente' ? '' : project.client_name); setIsEditingClient(true); }} title="Editar cliente" style={{ padding: '3px 6px', color: 'var(--text-muted)', borderColor: 'transparent' }}><Pencil size={14} /></button>
+              </div>
+            )}
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
               <span>Estado: <strong style={{ color: 'white', padding: '4px 8px', background: 'rgba(255,255,255,0.1)', borderRadius: '4px' }}>{project.status}</strong></span>
             </div>

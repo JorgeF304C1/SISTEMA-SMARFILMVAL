@@ -55,6 +55,10 @@ class ProjectLaborCostUpdate(BaseModel):
 class ProjectInstallationDateUpdate(BaseModel):
     installation_date: Optional[str]
 
+class ProjectDetailsUpdate(BaseModel):
+    name: Optional[str] = None
+    client_name: Optional[str] = None
+
 def calculate_consumption(areas, roll_width):
     if roll_width <= 0:
         return 0, [], 0, 0, 0, 100
@@ -256,6 +260,22 @@ def update_installation_date(project_id: int, date_update: ProjectInstallationDa
     if not project:
         raise HTTPException(status_code=404, detail="Project not found")
     project.installation_date = date_update.installation_date
+    db.commit()
+    db.refresh(project)
+    return project
+
+@router.put("/{project_id}/details")
+def update_project_details(project_id: int, details: ProjectDetailsUpdate, db: Session = Depends(get_db)):
+    project = db.query(models.Project).filter(models.Project.id == project_id).first()
+    if not project:
+        raise HTTPException(status_code=404, detail="Project not found")
+    if details.name is not None:
+        name = details.name.strip()
+        if not name:
+            raise HTTPException(status_code=400, detail="El nombre del proyecto no puede estar vacío")
+        project.name = name
+    if details.client_name is not None:
+        project.client_name_direct = details.client_name.strip()
     db.commit()
     db.refresh(project)
     return project
