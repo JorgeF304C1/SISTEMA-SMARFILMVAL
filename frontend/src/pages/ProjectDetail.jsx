@@ -20,7 +20,7 @@ export default function ProjectDetail({ user }) {
   const [uploadingPhoto, setUploadingPhoto] = useState(false);
   const fileInputRef = useRef(null);
   
-  const [newArea, setNewArea] = useState({ name: '', width: '', height: '' });
+  const [newArea, setNewArea] = useState({ name: '', width: '', height: '', quantity: 1 });
   const [newExpense, setNewExpense] = useState({ description: '', amount: '', expense_type: 'Variable', category: '', quantity: 1 });
   const [isEditingPrice, setIsEditingPrice] = useState(false);
   const [tempPrice, setTempPrice] = useState("");
@@ -78,11 +78,15 @@ export default function ProjectDetail({ user }) {
       await axios.post(`${API_URL}/projects/${id}/areas`, {
         name: newArea.name,
         width: parseFloat(newArea.width),
-        height: parseFloat(newArea.height)
+        height: parseFloat(newArea.height),
+        quantity: parseInt(newArea.quantity) || 1
       });
-      setNewArea({ name: '', width: '', height: '' });
+      setNewArea({ name: '', width: '', height: '', quantity: 1 });
       loadData();
-    } catch (err) { console.error(err); }
+    } catch (err) {
+      alert(err.response?.data?.detail || "Error al añadir el área");
+      console.error(err);
+    }
   };
 
   const handleDeleteArea = async (areaId) => {
@@ -404,14 +408,20 @@ export default function ProjectDetail({ user }) {
   const generateCutDiagramPDF = async () => {
     const blockTag = `Proyecto: ${project.name} · #${project.id}`;
     const rowsHtml = consumptionBreakdown.map((row, index) => {
-      const piecesHtml = row.pieces.map(piece => {
-        const widthPct = (piece.width / project.roll_width) * 100;
-        return `<div style="width:${widthPct}%;height:100%;border-right:1px solid rgba(0,0,0,0.2);background:rgba(14,165,233,0.25);position:relative;display:inline-block;vertical-align:top;">
-          <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:10px;text-align:center;padding:2px;overflow:hidden;">
+      const columnsHtml = (row.columns || []).map(col => {
+        const colWidthPct = (col.width / project.roll_width) * 100;
+        const leftoverH = row.max_height - col.used_height;
+        const piecesStack = col.pieces.map(piece => {
+          const hPct = (piece.height / row.max_height) * 100;
+          return `<div style="height:${hPct}%;background:rgba(14,165,233,0.25);border-bottom:1px solid rgba(0,0,0,0.2);display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:9px;text-align:center;padding:1px;overflow:hidden;">
             <strong style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;">${piece.original_area_name}</strong>
-            <span>${piece.width}m × ${piece.height}m</span>
-          </div>
-        </div>`;
+            <span style="white-space:nowrap;">${piece.width}m × ${piece.height}m</span>
+          </div>`;
+        }).join('');
+        const leftoverHtml = leftoverH > 0.001
+          ? `<div style="height:${(leftoverH / row.max_height) * 100}%;background:rgba(239,68,68,0.12);display:flex;align-items:center;justify-content:center;font-size:9px;color:#cc0000;text-align:center;overflow:hidden;">Retazo ${col.width}×${leftoverH.toFixed(2)}m</div>`
+          : '';
+        return `<div style="width:${colWidthPct}%;height:100%;border-right:1px solid rgba(0,0,0,0.25);display:inline-block;vertical-align:top;">${piecesStack}${leftoverHtml}</div>`;
       }).join('');
       const freeWidth = project.roll_width - row.current_width;
       const freePct = (freeWidth / project.roll_width) * 100;
@@ -426,8 +436,8 @@ export default function ProjectDetail({ user }) {
             <span style="font-size:11px;color:#888;">${blockTag}</span>
           </div>
           <div style="font-size:12px;color:#666;margin-bottom:8px;">Metro Lineal a Cortar: <strong>${row.max_height} m</strong></div>
-          <div style="width:100%;height:70px;background:#f9f9f9;border:1px solid #ddd;border-radius:4px;overflow:hidden;white-space:nowrap;">
-            ${piecesHtml}${freeHtml}
+          <div style="width:100%;height:90px;background:#f9f9f9;border:1px solid #ddd;border-radius:4px;overflow:hidden;white-space:nowrap;">
+            ${columnsHtml}${freeHtml}
           </div>
           <table style="width:100%;border-collapse:collapse;margin-top:8px;font-size:12px;">
             <tr style="background:#f4f4f4;"><th style="padding:6px;border:1px solid #ddd;">Pieza</th><th style="padding:6px;border:1px solid #ddd;">Ancho</th><th style="padding:6px;border:1px solid #ddd;">Alto</th><th style="padding:6px;border:1px solid #ddd;">m²</th></tr>
@@ -502,7 +512,6 @@ export default function ProjectDetail({ user }) {
     let blockIndex = 0;
     const blocksHtml = consumptionBreakdown.map((row, r) => {
       const freeWidth = project.roll_width - row.current_width;
-      const wasteSqm = row.max_height * Math.max(0, freeWidth);
 
       const laminasHtml = row.pieces.map(p => {
         const pct = (p.width / project.roll_width) * 100;
@@ -525,9 +534,22 @@ export default function ProjectDetail({ user }) {
           </div>`;
       }).join('');
 
-      const sobranteHtml = freeWidth > 0.001 ? (() => {
+      // Retazos reales de la fila: strip derecho + sobrante superior de cada columna apilada
+      const scraps = [];
+      if (freeWidth > 0.001) {
+        scraps.push({ w: freeWidth, h: row.max_height });
+      }
+      (row.columns || []).forEach(col => {
+        const leftoverH = row.max_height - col.used_height;
+        if (leftoverH > 0.001) {
+          scraps.push({ w: col.width, h: leftoverH });
+        }
+      });
+
+      const renderScrap = (scrap) => {
         const sep = blockIndex++ > 0 ? '<div style="border-top:2px dashed #bbb;margin:0 0 16px;text-align:right;color:#bbb;font-size:11px;">✂ - - - - - - - - - - - - - - - - - - - - - - - - - -</div>' : '';
-        const sobrPct = (freeWidth / project.roll_width) * 100;
+        const sobrPct = Math.min(100, (scrap.w / project.roll_width) * 100);
+        const sqm = scrap.w * scrap.h;
         return `${sep}
           <div style="page-break-inside:avoid;border:1px solid #fca5a5;border-radius:6px;padding:12px;margin-bottom:28px;background:#fff8f8;">
             <div style="display:flex;justify-content:space-between;margin-bottom:8px;">
@@ -537,13 +559,14 @@ export default function ProjectDetail({ user }) {
             <div style="width:100%;height:70px;background:#f9f9f9;border:1px solid #ddd;border-radius:4px;overflow:hidden;white-space:nowrap;">
               <div style="width:${sobrPct}%;height:100%;background:rgba(239,68,68,0.18);display:inline-block;vertical-align:top;position:relative;">
                 <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:11px;color:#cc0000;text-align:center;">
-                  ${freeWidth.toFixed(3)}m × ${row.max_height}m
+                  ${scrap.w.toFixed(3)}m × ${scrap.h.toFixed(2)}m
                 </div>
               </div>
             </div>
-            <p style="margin:8px 0 0;font-size:13px;color:#dc2626;"><strong>Sobrante:</strong> ${freeWidth.toFixed(3)}m × ${row.max_height}m = ${wasteSqm.toFixed(3)} m²</p>
+            <p style="margin:8px 0 0;font-size:13px;color:#dc2626;"><strong>Sobrante:</strong> ${scrap.w.toFixed(3)}m × ${scrap.h.toFixed(2)}m = ${sqm.toFixed(3)} m²</p>
           </div>`;
-      })() : '';
+      };
+      const sobranteHtml = scraps.map(renderScrap).join('');
 
       return laminasHtml + sobranteHtml;
     }).join('');
@@ -840,6 +863,15 @@ export default function ProjectDetail({ user }) {
               <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', color: 'var(--text-muted)' }}>Alto Total (m)</label>
               <input type="number" step="0.01" required value={newArea.height} onChange={e => setNewArea({...newArea, height: e.target.value})} />
             </div>
+            <div style={{ marginBottom: '16px' }}>
+              <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', color: 'var(--text-muted)' }}>Cantidad de Paneles</label>
+              <input type="number" min="1" step="1" value={newArea.quantity} onChange={e => setNewArea({...newArea, quantity: parseInt(e.target.value) || 1})} />
+              {newArea.quantity > 1 && (
+                <p style={{ marginTop: '6px', fontSize: '11px', color: 'var(--accent-cyan)' }}>
+                  Se crearán {newArea.quantity} paneles idénticos de {newArea.width || '?'}m × {newArea.height || '?'}m
+                </p>
+              )}
+            </div>
             <button type="submit" className="btn-primary" style={{ width: '100%', justifyContent: 'center' }}>+ Añadir</button>
           </form>
           
@@ -895,21 +927,32 @@ export default function ProjectDetail({ user }) {
                      <span style={{ fontSize: '13px', color: 'var(--text-muted)' }}>M. Lineales a Cortar (Altura de Fila): <strong style={{color: 'white'}}>{row.max_height} m</strong></span>
                   </div>
                   
-                  {/* Visualización del Rollo */}
-                  <div style={{ width: '100%', height: '80px', background: 'rgba(255,255,255,0.05)', borderRadius: '4px', position: 'relative', overflow: 'hidden', display: 'flex' }}>
-                     {row.pieces.map((piece, pIndex) => {
-                        const widthPercentage = (piece.width / project.roll_width) * 100;
+                  {/* Visualización del Rollo: columnas con piezas apiladas */}
+                  <div style={{ width: '100%', height: '110px', background: 'rgba(255,255,255,0.05)', borderRadius: '4px', position: 'relative', overflow: 'hidden', display: 'flex' }}>
+                     {(row.columns || []).map((col, cIndex) => {
+                        const colWidthPct = (col.width / project.roll_width) * 100;
+                        const leftoverH = row.max_height - col.used_height;
                         return (
-                           <div key={pIndex} style={{ width: `${widthPercentage}%`, height: '100%', borderRight: '1px solid rgba(255,255,255,0.2)', background: 'rgba(14, 165, 233, 0.2)', position: 'relative' }}>
-                              <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', fontSize: '11px', textAlign: 'center', padding: '4px' }}>
-                                 <strong style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '100%' }}>{piece.original_area_name}</strong>
-                                 <span style={{ opacity: 0.8 }}>{piece.width}m x {piece.height}m</span>
-                              </div>
+                           <div key={cIndex} style={{ width: `${colWidthPct}%`, height: '100%', borderRight: '1px solid rgba(255,255,255,0.2)', display: 'flex', flexDirection: 'column' }}>
+                              {col.pieces.map((piece, pIndex) => {
+                                 const hPct = (piece.height / row.max_height) * 100;
+                                 return (
+                                    <div key={pIndex} style={{ height: `${hPct}%`, background: 'rgba(14, 165, 233, 0.2)', borderBottom: '1px solid rgba(255,255,255,0.2)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', fontSize: '10px', textAlign: 'center', padding: '2px', overflow: 'hidden' }}>
+                                       <strong style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '100%' }}>{piece.original_area_name}</strong>
+                                       <span style={{ opacity: 0.8, whiteSpace: 'nowrap' }}>{piece.width}m x {piece.height}m</span>
+                                    </div>
+                                 );
+                              })}
+                              {leftoverH > 0.001 && (
+                                 <div style={{ flex: 1, background: 'rgba(239, 68, 68, 0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '10px', color: '#fca5a5', textAlign: 'center', overflow: 'hidden' }}>
+                                    Retazo: {col.width}×{leftoverH.toFixed(2)}m
+                                 </div>
+                              )}
                            </div>
                         );
                      })}
                      {/* Espacio vacío / Desperdicio */}
-                     {row.current_width < project.roll_width && (
+                     {row.current_width < project.roll_width - 0.001 && (
                        <div style={{ flex: 1, background: 'rgba(239, 68, 68, 0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                          <span style={{ fontSize: '11px', color: '#fca5a5' }}>Libre: {(project.roll_width - row.current_width).toFixed(2)}m</span>
                        </div>

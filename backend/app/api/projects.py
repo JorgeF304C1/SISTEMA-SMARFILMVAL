@@ -27,6 +27,7 @@ class AreaCreate(BaseModel):
     name: Optional[str] = ""
     width: float
     height: float
+    quantity: int = 1
 
 class ExpenseCreate(BaseModel):
     description: str
@@ -87,24 +88,51 @@ def calculate_consumption(areas, roll_width):
     # 2. Sort by height desc, then width desc
     pieces.sort(key=lambda p: (p["height"], p["width"]), reverse=True)
     
-    # 3. Bin packing (Row approach)
+    # 3. Bin packing guillotina: filas → columnas → apilado vertical
+    #    Cada fila es un corte transversal de largo max_height. Dentro, cada
+    #    columna tiene ancho fijo (su primera pieza) y apila piezas a lo largo,
+    #    aprovechando el retazo que antes se desperdiciaba junto a piezas largas.
     rows = []
     epsilon = 0.001
-    
+
     for p in pieces:
         placed = False
+        # 3a. Apilar en una columna existente (best-fit: menor sobra de ancho)
+        best = None  # (slack, row, col)
         for r in rows:
-            if r["current_width"] + p["width"] <= roll_width + epsilon:
-                r["current_width"] += p["width"]
-                r["pieces"].append(p)
-                placed = True
-                break
+            for c in r["columns"]:
+                if (p["width"] <= c["width"] + epsilon
+                        and c["used_height"] + p["height"] <= r["max_height"] + epsilon):
+                    slack = c["width"] - p["width"]
+                    if best is None or slack < best[0]:
+                        best = (slack, r, c)
+        if best is not None:
+            _, r, c = best
+            c["pieces"].append(p)
+            c["used_height"] += p["height"]
+            placed = True
+
+        # 3b. Nueva columna en una fila existente (first-fit)
+        if not placed:
+            for r in rows:
+                if (r["current_width"] + p["width"] <= roll_width + epsilon
+                        and p["height"] <= r["max_height"] + epsilon):
+                    r["columns"].append({"width": p["width"], "used_height": p["height"], "pieces": [p]})
+                    r["current_width"] += p["width"]
+                    placed = True
+                    break
+
+        # 3c. Nueva fila
         if not placed:
             rows.append({
                 "max_height": p["height"],
                 "current_width": p["width"],
-                "pieces": [p]
+                "columns": [{"width": p["width"], "used_height": p["height"], "pieces": [p]}],
             })
+
+    # Lista plana de piezas por fila (la usan la tabla y el PDF de desperdicio)
+    for r in rows:
+        r["pieces"] = [pc for c in r["columns"] for pc in c["pieces"]]
             
     # 4. Calculate metrics
     true_linear_meters = sum(r["max_height"] for r in rows)
@@ -367,11 +395,21 @@ def get_project_detail(project_id: int, db: Session = Depends(get_db)):
 
 @router.post("/{project_id}/areas")
 def add_area(project_id: int, area: AreaCreate, db: Session = Depends(get_db)):
-    db_area = models.ProjectArea(project_id=project_id, **area.model_dump())
-    db.add(db_area)
+    if area.width <= 0 or area.height <= 0:
+        raise HTTPException(status_code=400, detail="Las medidas deben ser mayores a 0")
+    quantity = max(1, area.quantity)
+    created = []
+    for i in range(1, quantity + 1):
+        name = area.name
+        if quantity > 1:
+            name = f"{area.name or 'Panel'} {i}/{quantity}"
+        db_area = models.ProjectArea(project_id=project_id, name=name, width=area.width, height=area.height)
+        db.add(db_area)
+        created.append(db_area)
     db.commit()
-    db.refresh(db_area)
-    return db_area
+    for a in created:
+        db.refresh(a)
+    return created[0] if quantity == 1 else created
 
 @router.delete("/{project_id}/areas/{area_id}")
 def delete_area(project_id: int, area_id: int, db: Session = Depends(get_db)):
