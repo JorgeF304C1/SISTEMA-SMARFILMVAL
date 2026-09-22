@@ -39,3 +39,7 @@ Thumbs.db
 *.db.bak
 /smartfilm.db
 /smartfilmviejo.db
+
+# Bases de datos con datos reales (no subir)
+*.db
+!backend/smartfilm_seed.db

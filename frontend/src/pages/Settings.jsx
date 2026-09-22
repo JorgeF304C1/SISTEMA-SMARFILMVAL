@@ -8,11 +8,7 @@ export default function Settings() {
   const [settings, setSettings] = useState({
     default_price_per_ml: 200,
     default_roll_width: 1.5,
-<<<<<<< HEAD
     default_base_cost_per_ml: 110.0,
-=======
-    default_base_cost_per_sqm: 70.0,
->>>>>>> 40a974469c9148ed5df7c24d9624ca3be7e2ff39
     default_labor_cost_per_sqm: 15.0,
     delivery_note_warranty_months: 3
   });
@@ -131,13 +127,14 @@ export default function Settings() {
 
         <div style={{ marginBottom: '24px' }}>
           <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold' }}>Ancho de Bobina Estándar (Metros)</label>
-          <p style={{ fontSize: '12px', color: 'var(--text-muted)', marginBottom: '8px' }}>El ancho del rollo de Smart Film usado para calcular los metros lineales.</p>
-          <input 
-            type="number" 
-            step="0.1" 
-            required 
-            value={settings.default_roll_width} 
-            onChange={e => setSettings({...settings, default_roll_width: parseFloat(e.target.value)})} 
+          <p style={{ fontSize: '12px', color: 'var(--text-muted)', marginBottom: '8px' }}>Ancho de bobina que tendrán los <strong>proyectos nuevos</strong> (ej. 1.5 o 1.54). En cada proyecto puedes cambiarlo por separado desde su ficha.</p>
+          <input
+            type="number"
+            step="0.01"
+            min="0.01"
+            required
+            value={settings.default_roll_width}
+            onChange={e => setSettings({...settings, default_roll_width: parseFloat(e.target.value)})}
             style={{ width: '100%', padding: '12px', borderRadius: '8px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: 'white' }}
           />
         </div>

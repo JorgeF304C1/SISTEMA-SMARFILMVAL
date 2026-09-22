@@ -179,8 +179,13 @@ export default function ProjectDetail({ user }) {
   };
 
   const handleUpdateRollWidth = async () => {
+    const width = parseFloat(tempRollWidth);
+    if (!(width > 0)) {
+      alert("El ancho de bobina debe ser un número mayor a 0 (ej. 1.54).");
+      return;
+    }
     try {
-      await axios.put(`${API_URL}/projects/${id}/roll_width`, { roll_width: parseFloat(tempRollWidth) });
+      await axios.put(`${API_URL}/projects/${id}/roll_width`, { roll_width: width });
       setIsEditingRollWidth(false);
       loadData();
     } catch (err) { console.error("Error updating roll width", err); }
@@ -737,8 +742,8 @@ export default function ProjectDetail({ user }) {
               {isEditingRollWidth ? (
                 <>
                   <input 
-                    type="number" step="0.1" 
-                    value={tempRollWidth} 
+                    type="number" step="0.01" min="0.01"
+                    value={tempRollWidth}
                     onChange={e => setTempRollWidth(e.target.value)}
                     style={{ background: 'transparent', color: 'white', border: '1px solid rgba(255,255,255,0.2)', borderRadius: '4px', padding: '4px 8px', width: '80px', outline: 'none' }}
                   />
